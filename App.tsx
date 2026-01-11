@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
+// Make sure your file in the services folder is named 'geminiService.ts'
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
 
@@ -13,6 +13,9 @@ const LOADING_MESSAGES = [
   "Navigating the night market...",
   "Mixing the perfect spirit..."
 ];
+
+// Fallback image in case everything else fails
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&fit=crop";
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>({
@@ -38,10 +41,27 @@ const App: React.FC = () => {
       currentSceneId: sceneId 
     }));
 
-    const textPromise = generateSceneContent(scene.corePrompt);
-    const imagePromise = generateSceneImage(scene.corePrompt);
+    // 1. Get Text (with safety catch)
+    const textPromise = generateSceneContent(scene.corePrompt).catch(err => {
+      console.error("Text failed", err);
+      return "The city hums with electric energy..."; // Safety text
+    });
 
-    const [narration, imageUrl] = await Promise.all([textPromise, imagePromise]);
+    // 2. Get Image (with safety catch)
+    const imagePromise = generateSceneImage(scene.corePrompt).catch(err => {
+      console.error("Image failed", err);
+      return null;
+    });
+
+    let [narration, imageUrl] = await Promise.all([textPromise, imagePromise]);
+
+    // --- CRITICAL FIX START ---
+    // If the service returned null, OR if it's undefined, USE THE DEFAULT IMAGE.
+    if (!imageUrl) {
+      console.log("Image generation failed, using fallback.");
+      imageUrl = DEFAULT_IMAGE;
+    }
+    // --- CRITICAL FIX END ---
 
     setGameState(prev => ({
       ...prev,
@@ -75,7 +95,7 @@ const App: React.FC = () => {
           <h1 className="text-sm tracking-[0.5em] uppercase text-magenta-500 font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-400">
             TRIP TO BANGKOK
           </h1>
-          <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-widest">A Bangkok Itenary</p>
+          <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-widest">A Bangkok Itinerary</p>
         </div>
         <div className="flex gap-4">
           <button 
@@ -90,6 +110,9 @@ const App: React.FC = () => {
       <main className="w-full max-w-4xl flex flex-col gap-8 pb-20">
         {/* Visual Container */}
         <div className="relative aspect-[16/10] w-full rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800/50 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+          {/* LOGIC FIX: Check if we have an image OR if we are generating. 
+              The !isGenerating check was hiding the image if it existed but we were just thinking. 
+              Now checking simple existence. */}
           {gameState.currentImageUrl && !gameState.isGenerating ? (
             <img 
               src={gameState.currentImageUrl} 
@@ -122,10 +145,10 @@ const App: React.FC = () => {
           ) : (
             <div className="animate-fade-in">
               <span className="text-fuchsia-500 text-xs font-bold uppercase tracking-widest mb-2 block">
-                {currentScene.isEnding ? 'Your Spirit Revealed' : 'Current Vibe'}
+                {currentScene?.isEnding ? 'Your Spirit Revealed' : 'Current Vibe'}
               </span>
               <h2 className="serif italic text-3xl md:text-4xl mb-4 text-white leading-tight">
-                {currentScene.title}
+                {currentScene?.title}
               </h2>
               <p className="text-lg md:text-xl leading-relaxed text-zinc-400 font-light max-w-3xl">
                 {gameState.currentText}
@@ -136,7 +159,7 @@ const App: React.FC = () => {
 
         {/* Choices Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {!gameState.isGenerating && currentScene.choices.map((choice) => (
+          {!gameState.isGenerating && currentScene?.choices.map((choice) => (
             <ChoiceButton 
               key={choice.id}
               text={choice.text}
@@ -145,7 +168,7 @@ const App: React.FC = () => {
             />
           ))}
           
-          {currentScene.isEnding && !gameState.isGenerating && (
+          {currentScene?.isEnding && !gameState.isGenerating && (
             <div className="col-span-full flex flex-col items-center mt-8 py-12 border-t border-zinc-900/50 bg-gradient-to-b from-transparent to-fuchsia-950/10 rounded-3xl">
               <p className="text-zinc-500 mb-8 uppercase tracking-[0.3em] text-[10px] font-black">Trip Completed</p>
               <button 
