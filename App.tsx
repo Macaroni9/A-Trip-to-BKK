@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
-// Make sure your file in the services folder is named 'geminiService.ts'
+// FIXED: Import path is singular 'geminiService'
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
 
@@ -14,7 +14,7 @@ const LOADING_MESSAGES = [
   "Mixing the perfect spirit..."
 ];
 
-// Fallback image in case everything else fails
+// A safe fallback image if everything goes wrong
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&fit=crop";
 
 const App: React.FC = () => {
@@ -41,27 +41,22 @@ const App: React.FC = () => {
       currentSceneId: sceneId 
     }));
 
-    // 1. Get Text (with safety catch)
+    // 1. Get Text (with error handling)
     const textPromise = generateSceneContent(scene.corePrompt).catch(err => {
-      console.error("Text failed", err);
-      return "The city hums with electric energy..."; // Safety text
+      console.error("Text Gen Error:", err);
+      return "The humid air of Bangkok embraces you as the city lights flicker to life...";
     });
 
-    // 2. Get Image (with safety catch)
+    // 2. Get Image (with error handling)
     const imagePromise = generateSceneImage(scene.corePrompt).catch(err => {
-      console.error("Image failed", err);
-      return null;
+      console.error("Image Gen Error:", err);
+      return DEFAULT_IMAGE;
     });
 
     let [narration, imageUrl] = await Promise.all([textPromise, imagePromise]);
 
-    // --- CRITICAL FIX START ---
-    // If the service returned null, OR if it's undefined, USE THE DEFAULT IMAGE.
-    if (!imageUrl) {
-      console.log("Image generation failed, using fallback.");
-      imageUrl = DEFAULT_IMAGE;
-    }
-    // --- CRITICAL FIX END ---
+    // Safety: Ensure we have a string
+    if (!imageUrl) imageUrl = DEFAULT_IMAGE;
 
     setGameState(prev => ({
       ...prev,
@@ -110,11 +105,10 @@ const App: React.FC = () => {
       <main className="w-full max-w-4xl flex flex-col gap-8 pb-20">
         {/* Visual Container */}
         <div className="relative aspect-[16/10] w-full rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800/50 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-          {/* LOGIC FIX: Check if we have an image OR if we are generating. 
-              The !isGenerating check was hiding the image if it existed but we were just thinking. 
-              Now checking simple existence. */}
           {gameState.currentImageUrl && !gameState.isGenerating ? (
             <img 
+              /* KEY FIX: This forces React to reload the image even if the URL looks similar */
+              key={gameState.currentImageUrl} 
               src={gameState.currentImageUrl} 
               alt="Bangkok Scene" 
               className="w-full h-full object-cover animate-fade-in"
