@@ -1,81 +1,92 @@
 import { Scene } from '../types';
 
-// 1. TEXT GENERATOR
+// 1. TEXT GENERATOR (Simulated for now, passes through the core prompt)
 export const generateSceneContent = async (corePrompt: string): Promise<string> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  // Simulate network delay for effect
+  await new Promise(resolve => setTimeout(resolve, 800));
   return corePrompt; 
 };
 
-// 2. IMAGE GENERATOR
+// 2. IMAGE GENERATOR (Mapped to your specific IBB/Imgur links)
 export const generateSceneImage = async (sceneId: string): Promise<string> => {
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Base parameters for optimization
-  const params = "?q=80&w=1920&fit=crop";
-
   switch (sceneId) {
     // --- INTRO ---
-    case 'start': // Suvarnabhumi Airport / Arrival
-      return `https://images.unsplash.com/photo-1569154941061-e231b4725ef1${params}`;
+    case 'start': 
+      // Landing / Airport
+      return 'https://i.ibb.co/VYvVcV94/original.png';
 
-    // --- PATH A (CHAOS) ---
-    case '2A': // Night Traffic / Neon
-      return `https://images.unsplash.com/photo-1563720223523-491ff04651de${params}`;
+    // --- PATH A (CHAOS / NIGHT) ---
+    case '2A': 
+      // Neon streets / Tuk-tuks
+      return 'https://i.ibb.co/CsH5p8VC/original-1.png';
     
-    case '3A': // Street Food / Grill
-      // Thai Street Food vendor
-      return `https://images.unsplash.com/photo-1559314809081-2748f21945d3${params}`;
+    case '3A': 
+      // Street Food / Smoke
+      return 'https://i.ibb.co/YT8MkFsd/original-2.png';
 
-    case '4A': // Sweets / Dessert
-      // Colorful dessert/sweets
-      return `https://images.unsplash.com/photo-1504544750208-dc0358e63f7f${params}`;
+    case '4A': 
+      // Desserts / 7-Eleven
+      return 'https://i.ibb.co/G4b1g8Lx/original-3.png';
 
-    // --- PATH B (MOVIE) ---
-    case '2B': // Skyline / Cinematic
-      // Bangkok Cityscape
-      return `https://images.unsplash.com/photo-1502301197179-65228ab57f78${params}`;
+    // --- PATH B (MOVIE / CALM) ---
+    case '2B': 
+      // Movie vibe / Scenic
+      return 'https://i.ibb.co/Y4pY4CfS/original-4.png';
 
-    case '3B': // River / Wat Arun View
-      return `https://images.unsplash.com/photo-1552465011-b4e21bf6e79a${params}`;
+    case '3B': 
+      // Riverside / Water
+      return 'https://i.ibb.co/8DqbvrsW/original-5.png';
 
-    case '4B': // Temple Detail
-      return `https://images.unsplash.com/photo-1548013146-72479768bada${params}`;
+    case '4B': 
+      // Temples / Old Town
+      return 'https://i.ibb.co/WdzZctd/original-6.png';
 
-    case '5B': // Park / Greenery
-      // Lumpini Park vibes
-      return `https://images.unsplash.com/photo-1596719600021-f0b3b44b6c3d${params}`;
+    case '5B': 
+      // Park / Greenery Reset
+      return 'https://i.ibb.co/cKxk0Wmg/original-7.png';
 
-    // --- ENDINGS ---
-    case 'khaosan_ending': // Party / Nightlife
-      return `https://images.unsplash.com/photo-1580977259648-936630f9d9a1${params}`;
+    // --- ENDINGS (DRINKS) ---
+    case 'khaosan_ending': 
+      // Drink #1: Khaosan Road (Straight Up)
+      return 'https://i.ibb.co/nqY7F9rL/original-8.png';
 
-    case 'jodd_fairs_ending': // Night Market Tents
-      return `https://images.unsplash.com/photo-1533929736472-114620521e6e${params}`;
+    case 'chao_phraya_ending': 
+      // Drink #2: Chao Phraya (Spritz)
+      return 'https://i.ibb.co/pvwvPR8F/original-9.png';
 
-    case '711_sweets_ending': // Convenience Store Neon
-      // Fallback to a neon city vibe if specific 7-11 is restricted
-      return `https://images.unsplash.com/photo-1554763071-6c2e2c269222${params}`;
+    case 'jodd_fairs_ending': 
+      // Drink #3: Jodd Fairs (Umami/Spicy)
+      return 'https://i.ibb.co/jvB5PV3R/original-10.png';
 
-    case 'sukhumvit_ending': // Rooftop Bar
-      return `https://images.unsplash.com/photo-1570530752763-71a62d3a3d5e${params}`;
+    case '711_sweets_ending': 
+      // Drink #4: 7-Eleven (Sweet/Dessert)
+      return 'https://i.ibb.co/rfpGbGgq/original-11.png';
 
-    case 'chao_phraya_ending': // Sunset River
-      return `https://images.unsplash.com/photo-1508009603885-50cf7c579365${params}`;
+    case 'sukhumvit_ending': 
+      // Drink #5: Sukhumvit (Pornstar Martini)
+      return 'https://i.ibb.co/xSmnwMZT/original-12.png';
 
-    case 'hotel_lobby_ending': // Luxury Interior
-      return `https://images.unsplash.com/photo-1566073771259-6a8506099945${params}`;
+    case 'hotel_lobby_ending': 
+      // Drink #6: Hotel Lobby (Old Fashioned)
+      return 'https://i.ibb.co/4ZvQs5sC/original-13.png';
 
-    case 'bts_skyline_ending': // Modern Transport/City
-      return `https://images.unsplash.com/photo-1481819613568-3701cbc70156${params}`;
+    case 'bts_skyline_ending': 
+      // Drink #7: BTS Skyline (Highball)
+      return 'https://i.ibb.co/vxpQ3yd7/original-14.png';
 
-    case 'chatuchak_ending': // Clothes Market
-      return `https://images.unsplash.com/photo-1441986300917-64674bd600d8${params}`;
+    case 'chatuchak_ending': 
+      // Drink #8: Chatuchak (Mocktail 1)
+      return 'https://i.ibb.co/wr6pjKJX/original-15.png';
 
-    case 'massage_ending': // Spa Atmosphere
-      return `https://images.unsplash.com/photo-1544161515-4ab6ce6db874${params}`;
+    case 'massage_ending': 
+      // Drink #9: Massage (Mocktail 2)
+      return 'https://i.ibb.co/RTbJ7Y0z/original-16.png';
 
     default:
-      // Reliable Fallback (Tuk Tuk)
-      return `https://images.unsplash.com/photo-1552458421-23a35f79a25b${params}`;
+      // Fallback (Use the Start image just in case)
+      return 'https://i.ibb.co/VYvVcV94/original.png';
   }
 };
