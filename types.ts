@@ -22,6 +22,7 @@ export interface GameState {
   isGenerating: boolean;
   currentText: string;
   currentImageUrl: string | null;
+  currentImageUrls?: string[];
 }
 
 export interface AIResponse {
