@@ -251,7 +251,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="w-full max-w-5xl flex flex-col gap-10 pb-20">
+      <main className="w-full max-w-5xl flex flex-col gap-10">
         
         {/* IMAGE CONTAINER / GALLERY */}
         <div className="relative aspect-[16/9] w-full rounded-[2.5rem] overflow-hidden bg-zinc-950 border border-zinc-800 shadow-[0_40px_100px_rgba(0,0,0,0.6)] group">
@@ -359,6 +359,30 @@ const App: React.FC = () => {
         </div>
       </main>
 
+      {/* FOOTER STATS - Now moves with content */}
+      <footer className="w-full max-w-5xl mt-20 pb-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-semibold tracking-[0.4em] uppercase text-zinc-600 border-t border-zinc-800/20 pt-10">
+        <div className="flex flex-wrap justify-center gap-8">
+          <span className="flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
+            LAT: 13.7214° N
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
+            LON: 100.5169° E
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
+            TEMP: 32°C
+          </span>
+        </div>
+        <div className="flex gap-8">
+          <span className="flex items-center gap-2">
+            <span className={`w-1.5 h-1.5 rounded-full transition-colors duration-500 ${gameState.isGenerating ? 'bg-fuchsia-500 animate-pulse' : 'bg-green-500/50'}`} />
+            MOOD: {gameState.isGenerating ? 'SHIFTING' : 'STABLE'}
+          </span>
+        </div>
+      </footer>
+
       {/* Skip Story Modal */}
       {isSkipMenuOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
@@ -391,30 +415,6 @@ const App: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* FOOTER STATS - LEBUA STATE TOWER DISTRICT */}
-      <footer className="fixed bottom-0 left-0 w-full p-8 flex justify-between text-[10px] font-semibold tracking-[0.4em] uppercase text-zinc-600 pointer-events-none z-0">
-        <div className="flex gap-8">
-          <span className="flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
-            LAT: 13.7214° N
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
-            LON: 100.5169° E
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
-            TEMP: 32°C
-          </span>
-        </div>
-        <div className="flex gap-8">
-          <span className="flex items-center gap-2">
-            <span className={`w-1.5 h-1.5 rounded-full transition-colors duration-500 ${gameState.isGenerating ? 'bg-fuchsia-500 animate-pulse' : 'bg-green-500/50'}`} />
-            MOOD: {gameState.isGenerating ? 'SHIFTING' : 'STABLE'}
-          </span>
-        </div>
-      </footer>
     </div>
   );
 };
