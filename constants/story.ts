@@ -1,4 +1,5 @@
 
+
 import { Scene } from '../types';
 
 export const STORY_DATA: Record<string, Scene> = {

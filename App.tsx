@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
@@ -13,10 +14,10 @@ const LOADING_MESSAGES = [
   "Mixing the perfect spirit..."
 ];
 
-// Reliable fallback image (Tuk Tuk at night)
-const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1552458421-23a35f79a25b?q=80&w=1920&fit=crop";
+const DEFAULT_IMAGE = "https://i.ibb.co/VYvVcV94/original.png";
 
 const App: React.FC = () => {
+  const [isStarted, setIsStarted] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
     currentSceneId: 'start',
     inventory: [],
@@ -27,8 +28,13 @@ const App: React.FC = () => {
   });
 
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
+  const [isSkipMenuOpen, setIsSkipMenuOpen] = useState(false);
 
-  const loadScene = useCallback(async (sceneId: string) => {
+  const endings = useMemo(() => {
+    return Object.values(STORY_DATA).filter(scene => scene.isEnding);
+  }, []);
+
+  const loadScene = useCallback(async (sceneId: string, isBackNav: boolean = false) => {
     const scene = STORY_DATA[sceneId];
     if (!scene) return;
 
@@ -41,13 +47,11 @@ const App: React.FC = () => {
     }));
 
     try {
-      // 1. Get Text
       const textPromise = generateSceneContent(scene.corePrompt).catch(err => {
         console.error("Text Gen Error:", err);
         return scene.corePrompt;
       });
 
-      // 2. Get Image - Passing sceneId
       const imagePromise = generateSceneImage(sceneId).catch(err => {
         console.error("Image Gen Error:", err);
         return DEFAULT_IMAGE;
@@ -57,13 +61,16 @@ const App: React.FC = () => {
 
       if (!imageUrl) imageUrl = DEFAULT_IMAGE;
 
-      setGameState(prev => ({
-        ...prev,
-        currentText: narration,
-        currentImageUrl: imageUrl,
-        isGenerating: false,
-        history: [...prev.history, sceneId]
-      }));
+      setGameState(prev => {
+        const newHistory = isBackNav ? prev.history : [...prev.history, sceneId];
+        return {
+          ...prev,
+          currentText: narration,
+          currentImageUrl: imageUrl,
+          isGenerating: false,
+          history: newHistory
+        };
+      });
 
     } catch (error) {
       console.error("Scene Load Error:", error);
@@ -75,34 +82,163 @@ const App: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
+  const startGame = () => {
+    setIsStarted(true);
     loadScene('start');
-  }, [loadScene]);
+  };
 
   const handleChoice = (nextId: string) => {
     if (gameState.isGenerating) return;
     loadScene(nextId);
   };
 
-  const restartGame = () => {
-    loadScene('start');
+  const handleBack = () => {
+    if (gameState.history.length <= 1 || gameState.isGenerating) return;
+    
+    const historyCopy = [...gameState.history];
+    historyCopy.pop();
+    const previousSceneId = historyCopy[historyCopy.length - 1];
+    
+    setGameState(prev => ({
+      ...prev,
+      history: historyCopy
+    }));
+    
+    loadScene(previousSceneId, true);
+  };
+
+  const handleSkipToEnding = (endingId: string) => {
+    setIsSkipMenuOpen(false);
+    setIsStarted(true);
+    loadScene(endingId);
+  };
+
+  const restartToLanding = () => {
+    setIsSkipMenuOpen(false);
+    setIsStarted(false);
+    setGameState({
+      currentSceneId: 'start',
+      inventory: [],
+      history: [],
+      isGenerating: false,
+      currentText: '',
+      currentImageUrl: null
+    });
   };
 
   const currentScene = STORY_DATA[gameState.currentSceneId];
 
+  // Landing Page Render
+  if (!isStarted) {
+    return (
+      <div className="min-h-screen bg-[#050505] text-zinc-100 flex flex-col items-center justify-center p-6 text-center">
+        <div className="max-w-2xl w-full space-y-8 animate-fade-in">
+          <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-12 shadow-[0_0_80px_rgba(217,70,239,0.15)] border border-zinc-800">
+            <img 
+              src={DEFAULT_IMAGE} 
+              alt="Bangkok Skyline" 
+              className="w-full h-full object-cover brightness-[0.6]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+              <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-400 mb-2">
+                A TRIP TO BANGKOK
+              </h1>
+              <div className="w-24 h-1 bg-gradient-to-r from-fuchsia-600 to-cyan-500 rounded-full" />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <p className="text-xl md:text-2xl text-zinc-300 font-light leading-relaxed">
+              In this journey, <span className="text-fuchsia-400 font-medium">you are the main character</span>. 
+            </p>
+            <p className="text-zinc-500 text-lg leading-relaxed max-w-lg mx-auto">
+              Every choice you make in the chaotic neon streets or serene riversides will shift your path. 
+              At the end of your trip, a signature cocktail awaits, mixed perfectly to match your unique Bangkok spirit.
+            </p>
+          </div>
+
+          <div className="pt-8 flex flex-col items-center gap-4">
+            <button 
+              onClick={startGame}
+              className="group relative px-16 py-6 overflow-hidden rounded-full bg-white text-black font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
+            >
+              <span className="relative z-10 text-lg">Start Your Story</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </button>
+            <button 
+              onClick={() => setIsSkipMenuOpen(true)}
+              className="text-[10px] uppercase tracking-[0.3em] text-zinc-600 hover:text-fuchsia-400 transition-colors"
+            >
+              Or Jump to Endings
+            </button>
+          </div>
+        </div>
+
+        {/* Re-using the Skip Modal here just in case they want it on landing */}
+        {isSkipMenuOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-fade-in">
+            <div className="w-full max-w-2xl bg-zinc-950 border border-zinc-800 rounded-3xl p-8 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                  <h2 className="text-2xl font-bold text-white uppercase tracking-widest">Ending Gallery</h2>
+                  <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Jump directly to any cocktail reveal</p>
+                </div>
+                <button 
+                  onClick={() => setIsSkipMenuOpen(false)}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {endings.map((ending) => (
+                  <button
+                    key={ending.id}
+                    onClick={() => handleSkipToEnding(ending.id)}
+                    className="group p-4 rounded-2xl border border-zinc-900 bg-zinc-900/50 hover:border-fuchsia-500/50 transition-all text-left"
+                  >
+                    <span className="block text-[10px] text-fuchsia-500 uppercase font-black tracking-widest mb-1">Ending</span>
+                    <span className="block text-zinc-200 group-hover:text-white font-medium transition-colors">{ending.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Active Game Render
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-100 flex flex-col items-center p-4 md:p-8">
       {/* Header */}
-      <header className="w-full max-w-4xl flex justify-between items-center mb-8 animate-fade-in">
-        <div>
-          <h1 className="text-sm tracking-[0.5em] uppercase text-magenta-500 font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-400">
-            TRIP TO BANGKOK
+      <header className="w-full max-w-4xl flex flex-col md:flex-row justify-between items-center mb-8 animate-fade-in gap-4">
+        <div className="text-center md:text-left">
+          <h1 className="text-sm tracking-[0.5em] uppercase font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-400">
+            A TRIP TO BANGKOK
           </h1>
           <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-widest">A Bangkok Itinerary</p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap justify-center gap-2">
+          {gameState.history.length > 1 && (
+            <button 
+              onClick={handleBack}
+              disabled={gameState.isGenerating}
+              className="text-[10px] px-3 py-1.5 rounded-full border border-zinc-800 hover:border-zinc-600 text-zinc-400 transition-colors uppercase tracking-widest disabled:opacity-30"
+            >
+              ← Back
+            </button>
+          )}
           <button 
-            onClick={restartGame}
+            onClick={() => setIsSkipMenuOpen(true)}
+            className="text-[10px] px-3 py-1.5 rounded-full border border-fuchsia-900/50 bg-fuchsia-950/10 hover:bg-fuchsia-900/20 text-fuchsia-400 transition-colors uppercase tracking-widest"
+          >
+            Skip Story
+          </button>
+          <button 
+            onClick={restartToLanding}
             className="text-[10px] px-3 py-1.5 rounded-full border border-zinc-800 hover:border-zinc-600 text-zinc-400 transition-colors uppercase tracking-widest"
           >
             New Trip
@@ -120,13 +256,11 @@ const App: React.FC = () => {
               src={gameState.currentImageUrl} 
               alt="Bangkok Scene" 
               className="w-full h-full object-cover animate-fade-in"
-              // SAFETY: If image fails to load, switch to default immediately
               onError={(e) => {
                 e.currentTarget.src = DEFAULT_IMAGE;
               }}
             />
           ) : (
-            // LOADING SPINNER
             <div className="w-full h-full flex items-center justify-center bg-[#0a0a0a]">
               <div className="flex flex-col items-center gap-6">
                 <div className="relative">
@@ -137,7 +271,6 @@ const App: React.FC = () => {
               </div>
             </div>
           )}
-          
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 pointer-events-none" />
         </div>
 
@@ -179,7 +312,7 @@ const App: React.FC = () => {
             <div className="col-span-full flex flex-col items-center mt-8 py-12 border-t border-zinc-900/50 bg-gradient-to-b from-transparent to-fuchsia-950/10 rounded-3xl">
               <p className="text-zinc-500 mb-8 uppercase tracking-[0.3em] text-[10px] font-black">Trip Completed</p>
               <button 
-                onClick={restartGame}
+                onClick={restartToLanding}
                 className="group relative px-12 py-5 overflow-hidden rounded-full bg-white text-black font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
               >
                 <span className="relative z-10">Fly Again</span>
@@ -190,7 +323,49 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* FOOTER */}
+      {/* Skip Story Modal */}
+      {isSkipMenuOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-2xl bg-zinc-950 border border-zinc-800 rounded-3xl p-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-white uppercase tracking-widest">Ending Gallery</h2>
+                <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Jump directly to any cocktail reveal</p>
+              </div>
+              <button 
+                onClick={() => setIsSkipMenuOpen(false)}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {endings.map((ending) => (
+                <button
+                  key={ending.id}
+                  onClick={() => handleSkipToEnding(ending.id)}
+                  className="group p-4 rounded-2xl border border-zinc-900 bg-zinc-900/50 hover:border-fuchsia-500/50 transition-all text-left"
+                >
+                  <span className="block text-[10px] text-fuchsia-500 uppercase font-black tracking-widest mb-1">Ending</span>
+                  <span className="block text-zinc-200 group-hover:text-white font-medium transition-colors">{ending.title}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <button 
+                onClick={() => setIsSkipMenuOpen(false)}
+                className="text-xs text-zinc-500 hover:text-zinc-300 uppercase tracking-widest underline underline-offset-4"
+              >
+                Return to current choice
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ambient Stats */}
       <footer className="fixed bottom-0 left-0 w-full p-6 flex justify-between text-[9px] tracking-widest uppercase text-zinc-700 pointer-events-none">
         <div className="flex gap-4">
           <span>LAT: 13.7563° N</span>

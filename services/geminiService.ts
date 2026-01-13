@@ -1,3 +1,4 @@
+
 import { Scene } from '../types';
 
 // 1. TEXT GENERATOR (Simulated for now, passes through the core prompt)
