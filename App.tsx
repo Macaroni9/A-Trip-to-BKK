@@ -4,7 +4,6 @@ import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
-import { GoogleGenAI } from "@google/genai";
 
 const LOADING_MESSAGES = [
   "Calling a Win Bike...",
@@ -37,45 +36,41 @@ const App: React.FC = () => {
   const [currentTemp, setCurrentTemp] = useState('32');
   const [tempSource, setTempSource] = useState<{ uri: string; title: string } | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchRealTimeTemp = async () => {
       try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        const result = await ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: "Find the current temperature in Bangkok, Thailand in Celsius. Use this specific source as a priority: https://www.accuweather.com/en/th/bangkok/318849/weather-forecast/318849. Return only the integer number representing the Celsius value.",
-          config: {
-            tools: [{ googleSearch: {} }]
-          }
-        });
+        // Direct fetch to Open-Meteo (No API Key needed)
+        const response = await fetch(
+          "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m&timezone=Asia%2FBangkok"
+        );
         
-        const text = result.text || "";
-        // Match the first sequence of digits in the response
-        const matches = text.match(/\d+/);
-        if (matches) {
-          setCurrentTemp(matches[0]);
-        }
+        if (!response.ok) throw new Error("Weather API failed");
         
-        const chunks = result.candidates?.[0]?.groundingMetadata?.groundingChunks;
-        if (chunks && chunks.length > 0) {
-          const firstWebSource = chunks.find(chunk => chunk.web)?.web;
-          if (firstWebSource) {
-            setTempSource({
-              uri: firstWebSource.uri,
-              title: firstWebSource.title
-            });
-          }
+        const data = await response.json();
+        
+        // If we get a valid temperature
+        if (data.current && data.current.temperature_2m !== undefined) {
+          const temp = Math.round(data.current.temperature_2m).toString();
+          setCurrentTemp(temp);
+          
+          setTempSource({
+            uri: "https://open-meteo.com",
+            title: "Open-Meteo Weather Data"
+          });
         }
       } catch (error) {
-        console.warn("Real-time temperature sync interrupted. Defaulting to standard seasonal data.", error);
+        console.warn("Weather sync failed, using default (32°C).", error);
       }
     };
     
     fetchRealTimeTemp();
-    // Refresh temperature every 30 minutes if the tab stays open
+    // Refresh temperature every 30 minutes
     const interval = setInterval(fetchRealTimeTemp, 1800000);
     return () => clearInterval(interval);
   }, []);
+
+    
+  
 
   const endings = useMemo(() => {
     return Object.values(STORY_DATA).filter(scene => scene.isEnding);
