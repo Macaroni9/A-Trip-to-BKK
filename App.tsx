@@ -14,7 +14,7 @@ const LOADING_MESSAGES = [
   "Debating to go Soi Cowboy..."
 ];
 
-const DEFAULT_IMAGE = "https://i.ibb.co/VYvVcV94/original.png";
+const DEFAULT_IMAGE = "https://i.ibb.co/JjVp3qBp/original-17.png";
 
 const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(false);
