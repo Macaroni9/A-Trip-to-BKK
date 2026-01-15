@@ -421,7 +421,7 @@ const App: React.FC = () => {
                 title={`Sourced from: ${tempSource.title}`}
                 className="ml-1 opacity-30 hover:opacity-100 transition-opacity"
               >
-                ⓘ
+                
               </a>
             )}
           </span>
