@@ -43,16 +43,17 @@ const App: React.FC = () => {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const result = await ai.models.generateContent({
           model: 'gemini-3-flash-preview',
-          contents: "What is the current temperature in Bangkok, Thailand right now in Celsius? Return only the number.",
+          contents: "Find the current temperature in Bangkok, Thailand in Celsius. Use this specific source as a priority: https://www.accuweather.com/en/th/bangkok/318849/weather-forecast/318849. Return only the integer number representing the Celsius value.",
           config: {
             tools: [{ googleSearch: {} }]
           }
         });
         
-        const text = result.text;
-        const matches = text?.match(/(\d+)/);
+        const text = result.text || "";
+        // Match the first sequence of digits in the response
+        const matches = text.match(/\d+/);
         if (matches) {
-          setCurrentTemp(matches[1]);
+          setCurrentTemp(matches[0]);
         }
         
         const chunks = result.candidates?.[0]?.groundingMetadata?.groundingChunks;
