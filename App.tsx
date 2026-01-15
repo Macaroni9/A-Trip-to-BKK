@@ -6,12 +6,12 @@ import { generateSceneContent, generateSceneImage } from './services/geminiServi
 import { ChoiceButton } from './components/ChoiceButton';
 
 const LOADING_MESSAGES = [
-  "Preparing your arrival...",
+  "Window Shopping at Platinum Mall...",
   "Crossing the Chao Phraya...",
   "Exploring the night market...",
-  "Capturing the skyline...",
-  "Curating your experience...",
-  "Perfecting the spirit..."
+  "Calling a Win Bike...",
+  "Debating to go Soi Cowboy...",
+  "Bargaining a Tuk-Tuk..."
 ];
 
 const DEFAULT_IMAGE = "https://i.ibb.co/VYvVcV94/original.png";
@@ -320,7 +320,7 @@ const App: React.FC = () => {
             ) : (
               <div className="animate-fade-in">
                 <span className="text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.4em] mb-4 block opacity-80">
-                  {currentScene?.isEnding ? 'Liquid Spirit' : 'The Encounter'}
+                  {currentScene?.isEnding ? 'You Have Reached...' : 'The Encounter'}
                 </span>
                 <h2 className="font-formal text-4xl md:text-5xl mb-4 text-white tracking-tight">
                   {currentScene?.title}
