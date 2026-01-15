@@ -4,14 +4,15 @@ import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
+import { GoogleGenAI } from "@google/genai";
 
 const LOADING_MESSAGES = [
-  "Window Shopping at Platinum Mall...",
+  "Calling a Win Bike...",
   "Crossing the Chao Phraya...",
   "Exploring the night market...",
-  "Calling a Win Bike...",
-  "Debating to go Soi Cowboy...",
-  "Bargaining a Tuk-Tuk..."
+  "Capturing the skyline...",
+  "Bargaining a Tuk-Tuk...",
+  "Debating to go Soi Cowboy..."
 ];
 
 const DEFAULT_IMAGE = "https://i.ibb.co/VYvVcV94/original.png";
@@ -31,6 +32,49 @@ const App: React.FC = () => {
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
   const [isSkipMenuOpen, setIsSkipMenuOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  
+  // Real-time temperature state
+  const [currentTemp, setCurrentTemp] = useState('32');
+  const [tempSource, setTempSource] = useState<{ uri: string; title: string } | null>(null);
+
+  useEffect(() => {
+    const fetchRealTimeTemp = async () => {
+      try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const result = await ai.models.generateContent({
+          model: 'gemini-3-flash-preview',
+          contents: "What is the current temperature in Bangkok, Thailand right now in Celsius? Return only the number.",
+          config: {
+            tools: [{ googleSearch: {} }]
+          }
+        });
+        
+        const text = result.text;
+        const matches = text?.match(/(\d+)/);
+        if (matches) {
+          setCurrentTemp(matches[1]);
+        }
+        
+        const chunks = result.candidates?.[0]?.groundingMetadata?.groundingChunks;
+        if (chunks && chunks.length > 0) {
+          const firstWebSource = chunks.find(chunk => chunk.web)?.web;
+          if (firstWebSource) {
+            setTempSource({
+              uri: firstWebSource.uri,
+              title: firstWebSource.title
+            });
+          }
+        }
+      } catch (error) {
+        console.warn("Real-time temperature sync interrupted. Defaulting to standard seasonal data.", error);
+      }
+    };
+    
+    fetchRealTimeTemp();
+    // Refresh temperature every 30 minutes if the tab stays open
+    const interval = setInterval(fetchRealTimeTemp, 1800000);
+    return () => clearInterval(interval);
+  }, []);
 
   const endings = useMemo(() => {
     return Object.values(STORY_DATA).filter(scene => scene.isEnding);
@@ -372,7 +416,18 @@ const App: React.FC = () => {
           </span>
           <span className="flex items-center gap-2">
             <span className="w-1 h-1 rounded-full bg-[#d4af37]/40" />
-            TEMP: 32°C
+            TEMP: {currentTemp}°C
+            {tempSource && (
+              <a 
+                href={tempSource.uri} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                title={`Sourced from: ${tempSource.title}`}
+                className="ml-1 opacity-30 hover:opacity-100 transition-opacity"
+              >
+                ⓘ
+              </a>
+            )}
           </span>
         </div>
         <div className="flex gap-8">
@@ -386,7 +441,7 @@ const App: React.FC = () => {
       {/* Skip Story Modal */}
       {isSkipMenuOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-2xl bg-[#0c0c0e] border border-zinc-800 rounded-3xl p-8 max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-2xl bg-[#0c0c0e] border border-zinc-800 rounded-3xl p-8 max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex justify-between items-center mb-10">
               <div>
                 <h2 className="text-3xl font-formal font-bold text-white tracking-tight">Ending Gallery</h2>
