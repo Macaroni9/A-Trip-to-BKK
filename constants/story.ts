@@ -18,17 +18,17 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'A Night Owl’s Test',
     corePrompt: 'The city pulses with bass and neon. Motorbikes weave through traffic like schools of fish. Where do you dive in?',
     choices: [
-      { id: 'c3', text: '“Neon streets, buckets, and bad decisions.”', nextSceneId: 'khaosan_ending' },
-      { id: 'c4', text: '“I want the city to hit me with flavor first.”', nextSceneId: '3A' }
+      { id: 'c3', text: '“Neon Streets, Buckets, and Bad Decisions.”', nextSceneId: 'khaosan_ending' },
+      { id: 'c4', text: '“I want the city to hit me with a Flavor Bomb.”', nextSceneId: '3A' }
     ]
   },
   '3A': {
     id: '3A',
     title: 'First Proper Bite',
-    corePrompt: 'The air is thick with the scent of grilled pork and lemongrass. Street vendors are busy, and the crowds are thick.',
+    corePrompt: 'The air is thick with the scent of grilled pork and lemongrass. Street vendors are busy, and the crowd is massive.',
     choices: [
-      { id: 'c5', text: '“Street food carnival—smoke, spice, crowds.”', nextSceneId: 'jodd_fairs_ending' },
-      { id: 'c6', text: '“Something dessert-like or fruity.”', nextSceneId: '4A' }
+      { id: 'c5', text: '“Street food carnival—smoke, Spice, Crowd.”', nextSceneId: 'jodd_fairs_ending' },
+      { id: 'c6', text: '“Craving for Dessert or fruits.”', nextSceneId: '4A' }
     ]
   },
   '4A': {
@@ -46,8 +46,8 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'The Bangkok Postcard',
     corePrompt: 'You’re looking for that cinematic glow. The city looks softer from a distance, like a dream in gold and blue.',
     choices: [
-      { id: 'c9', text: '“River & Skyline, like I’m in a music video.”', nextSceneId: '3B' },
-      { id: 'c10', text: '“Temples, old streets, and time travel vibes.”', nextSceneId: '4B' }
+      { id: 'c9', text: '“River & Skyline, like I’m in a Music Video.”', nextSceneId: '3B' },
+      { id: 'c10', text: '“Temples, Old streets, and Time Travel vibes.”', nextSceneId: '4B' }
     ]
   },
   '3B': {
@@ -55,8 +55,8 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'Riverside Magic',
     corePrompt: 'The Chao Phraya river reflects the city lights like a liquid mirror. The breeze is finally cool.',
     choices: [
-      { id: 'c11', text: '“Golden hour, breezy, light, sparkly.”', nextSceneId: 'chao_phraya_ending' },
-      { id: 'c12', text: '“Quiet, classy, slow-sip energy.”', nextSceneId: 'hotel_lobby_ending' }
+      { id: 'c11', text: '“Golden Hour, Breezy, Light, Sparkly.”', nextSceneId: 'chao_phraya_ending' },
+      { id: 'c12', text: '“Quiet, Classy, Slow-Sip Energy.”', nextSceneId: 'hotel_lobby_ending' }
     ]
   },
   '4B': {
@@ -64,8 +64,8 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'Temple Day Discovery',
     corePrompt: 'The spires of Wat Arun glisten in the sun. It’s majestic, spiritual, and incredibly hot. How are we moving?',
     choices: [
-      { id: 'c13', text: '“River boat / BTS / easy ride—keep it crisp.”', nextSceneId: 'bts_skyline_ending' },
-      { id: 'c14', text: '“Too hot. I need a non-alcohol reset first.”', nextSceneId: '5B' }
+      { id: 'c13', text: '“River Boat / BTS / Easy Ride—Keep it Crisp.”', nextSceneId: 'bts_skyline_ending' },
+      { id: 'c14', text: '“Too Hot. I need a non-alcohol reset first.”', nextSceneId: '5B' }
     ]
   },
   '5B': {
@@ -73,8 +73,8 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'The Great Reset',
     corePrompt: 'Your senses are overloaded. You need to ground yourself before the next adventure.',
     choices: [
-      { id: 'c15', text: '“Iconic tourist-proof: market & hustle.”', nextSceneId: 'chatuchak_ending' },
-      { id: 'c16', text: '“I want to be reborn: spa / massage / calm.”', nextSceneId: 'massage_ending' }
+      { id: 'c15', text: '“Iconic tourist-proof: Market & Hustle.”', nextSceneId: 'chatuchak_ending' },
+      { id: 'c16', text: '“I want to be reborn: Spa / Massage / Calm.”', nextSceneId: 'massage_ending' }
     ]
   },
   // ENDINGS
