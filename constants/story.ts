@@ -9,7 +9,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'The humidity hits you like a warm hug as you step out of the airport. The smell of jet fuel and orchids fills the air. Bangkok is waiting.',
     choices: [
       { id: 'c1', text: '“Drop my bags and chase chaos.”', nextSceneId: '2A' },
-      { id: 'c2', text: '“Slow down; I want Bangkok to feel like a movie.”', nextSceneId: '2B' }
+      { id: 'c2', text: '“Sabai Sabai; I want Bangkok to feel like a movie.”', nextSceneId: '2B' }
     ]
   },
   // CHAOS PATH
@@ -28,7 +28,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'The air is thick with the scent of grilled pork and lemongrass. Street vendors are busy, and the crowds are thick.',
     choices: [
       { id: 'c5', text: '“Street food carnival—smoke, spice, crowds.”', nextSceneId: 'jodd_fairs_ending' },
-      { id: 'c6', text: '“Something dessert-like from a 7-Eleven.”', nextSceneId: '4A' }
+      { id: 'c6', text: '“Something dessert-like or fruity.”', nextSceneId: '4A' }
     ]
   },
   '4A': {
@@ -37,7 +37,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'The heat is real. You need a sugar rush to keep the momentum going. What’s the move?',
     choices: [
       { id: 'c7', text: '“7-Eleven sweets, guilty joy.”', nextSceneId: '711_sweets_ending' },
-      { id: 'c8', text: '“I want a ‘fancy messy’ dessert moment.”', nextSceneId: 'sukhumvit_ending' }
+      { id: 'c8', text: '“I want a ‘fancy messy’ bougie moment.”', nextSceneId: 'sukhumvit_ending' }
     ]
   },
   // MOVIE PATH
@@ -46,7 +46,7 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'The Bangkok Postcard',
     corePrompt: 'You’re looking for that cinematic glow. The city looks softer from a distance, like a dream in gold and blue.',
     choices: [
-      { id: 'c9', text: '“Water + skyline = I’m in a music video.”', nextSceneId: '3B' },
+      { id: 'c9', text: '“River & Skyline, like I’m in a music video.”', nextSceneId: '3B' },
       { id: 'c10', text: '“Temples, old streets, and time travel vibes.”', nextSceneId: '4B' }
     ]
   },
@@ -73,28 +73,28 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'The Great Reset',
     corePrompt: 'Your senses are overloaded. You need to ground yourself before the next adventure.',
     choices: [
-      { id: 'c15', text: '“Iconic tourist-proof: market + hustle.”', nextSceneId: 'chatuchak_ending' },
+      { id: 'c15', text: '“Iconic tourist-proof: market & hustle.”', nextSceneId: 'chatuchak_ending' },
       { id: 'c16', text: '“I want to be reborn: spa / massage / calm.”', nextSceneId: 'massage_ending' }
     ]
   },
   // ENDINGS
   'khaosan_ending': {
     id: 'khaosan_ending',
-    title: 'KHAOSAN ROAD',
+    title: 'KHAOSAN REGRET',
     corePrompt: 'The music is deafening, the buckets are strong. You black out politely and wake up with glitter in your pocket and a smile on your face.',
     choices: [],
     isEnding: true
   },
   'jodd_fairs_ending': {
     id: 'jodd_fairs_ending',
-    title: 'JODD FAIRS',
+    title: 'JODD FAIRS GLUTTONY',
     corePrompt: 'Surrounded by the glow of the night market. You sweat, you smile, and you pretend you can handle Thai spicy. Your soul feels seasoned.',
     choices: [],
     isEnding: true
   },
   '711_sweets_ending': {
     id: '711_sweets_ending',
-    title: '7-ELEVEN SWEET RUN',
+    title: '7-ELEVEN SUGAR RUSH',
     corePrompt: 'You came for culture, but you stayed for the ham-and-cheese toasties and neon sugar. A pure, unadulterated Bangkok high.',
     choices: [],
     isEnding: true
@@ -108,28 +108,28 @@ export const STORY_DATA: Record<string, Scene> = {
   },
   'chao_phraya_ending': {
     id: 'chao_phraya_ending',
-    title: 'CHAO PHRAYA SUNSET',
+    title: 'SUNSET AT CHAO PHRAYA',
     corePrompt: 'The sky is a palette of orange and purple. For exactly one drink, you are the main character of a high-budget travel vlog.',
     choices: [],
     isEnding: true
   },
   'hotel_lobby_ending': {
     id: 'hotel_lobby_ending',
-    title: 'BANGKOK HOTEL LOBBY',
+    title: 'HOTEL LOBBY DRAMS',
     corePrompt: 'In the sanctuary of marble and air conditioning. You sit straighter. You tip better. You start saying “neat.” Classy move.',
     choices: [],
     isEnding: true
   },
   'bts_skyline_ending': {
     id: 'bts_skyline_ending',
-    title: 'BTS SKYLINE RIDE',
+    title: 'B(EER)TS SKYLINE',
     corePrompt: 'Clean, tall, and refreshing. The city moves fast outside the glass window as you glide above the traffic jams. Total efficiency.',
     choices: [],
     isEnding: true
   },
   'chatuchak_ending': {
     id: 'chatuchak_ending',
-    title: 'CHATUCHAK QUEST',
+    title: 'LOST IN CHATUCHAK',
     corePrompt: 'A sweet-sour reward for surviving the heat, the crowds, and the intense bargaining. You found the perfect vintage shirt.',
     choices: [],
     isEnding: true
