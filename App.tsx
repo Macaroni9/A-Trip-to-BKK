@@ -391,7 +391,7 @@ const App: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
                   <div>
                     <span className="text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.4em] mb-4 block opacity-80">
-                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'You Have Reached...' : 'The Ingredients') : 'The Encounter'}
+                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'You Have Reached...' : 'Ingredients') : 'The Encounter'}
                     </span>
                     <h2 className="font-formal text-4xl md:text-5xl text-white tracking-tight">
                       {currentScene?.title}
