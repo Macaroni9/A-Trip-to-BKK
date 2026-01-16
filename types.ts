@@ -13,6 +13,9 @@ export interface Scene {
   corePrompt: string;
   choices: Choice[];
   isEnding?: boolean;
+  recipe?: string;
+  abv?: number;
+  sweetness?: number;
 }
 
 export interface GameState {

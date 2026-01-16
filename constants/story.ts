@@ -1,5 +1,4 @@
 
-
 import { Scene } from '../types';
 
 export const STORY_DATA: Record<string, Scene> = {
@@ -82,6 +81,9 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'khaosan_ending',
     title: 'KHAOSAN REGRET',
     corePrompt: 'The music is deafening, the buckets are strong. You black out politely and wake up with glitter in your pocket and a smile on your face.',
+    recipe: 'Pisco, Gin, Coconut fat washed Aperol, Passionfruit, Verjus, Sour Rainbow.',
+    abv: 4,
+    sweetness: 2.5,
     choices: [],
     isEnding: true
   },
@@ -89,6 +91,9 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'jodd_fairs_ending',
     title: 'JODD FAIRS GLUTTONY',
     corePrompt: 'Surrounded by the glow of the night market. You sweat, you smile, and you pretend you can handle Thai spicy. Your soul feels seasoned.',
+    recipe: 'Reposado tequila, Tropical Gin, Sherry, White Soy, Sake, Kombu, Mezcal, Salted Wasabi Pineapple Chip.',
+    abv: 4.5,
+    sweetness: 2,
     choices: [],
     isEnding: true
   },
@@ -96,6 +101,9 @@ export const STORY_DATA: Record<string, Scene> = {
     id: '711_sweets_ending',
     title: '7-ELEVEN SUGAR RUSH',
     corePrompt: 'You came for culture, but you stayed for the ham-and-cheese toasties and neon sugar. A pure, unadulterated Bangkok high.',
+    recipe: 'Aged Rum, Tea, Coconut & Palm Reduction, Jasmine, Creme De Cacao.',
+    abv: 3,
+    sweetness: 3.5,
     choices: [],
     isEnding: true
   },
@@ -110,6 +118,9 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'chao_phraya_ending',
     title: 'SUNSET AT CHAO PHRAYA',
     corePrompt: 'The sky is a palette of orange and purple. For exactly one drink, you are the main character of a high-budget travel vlog.',
+    recipe: 'Bergamot, Peach, St.Germain, Earl Grey, Grapefruit, Bubbles.',
+    abv: 1.5,
+    sweetness: 2,
     choices: [],
     isEnding: true
   },

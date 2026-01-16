@@ -16,6 +16,28 @@ const LOADING_MESSAGES = [
 
 const DEFAULT_IMAGE = "https://i.ibb.co/JjVp3qBp/original-17.png";
 
+const Stars: React.FC<{ rating: number; label: string }> = ({ rating, label }) => {
+  const fullStars = Math.floor(rating);
+  const hasHalf = rating % 1 !== 0;
+  
+  return (
+    <div className="flex flex-col items-center md:items-start">
+      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{label}</span>
+      <div className="flex gap-0.5">
+        {[...Array(5)].map((_, i) => {
+          if (i < fullStars) {
+            return <span key={i} className="text-[#d4af37]">★</span>;
+          } else if (i === fullStars && hasHalf) {
+            return <span key={i} className="text-[#d4af37] relative overflow-hidden inline-block w-[0.5em]">★<span className="absolute left-0 top-0 text-zinc-800">★</span></span>;
+          } else {
+            return <span key={i} className="text-zinc-800">★</span>;
+          }
+        })}
+      </div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
@@ -173,6 +195,14 @@ const App: React.FC = () => {
   };
 
   const currentScene = STORY_DATA[gameState.currentSceneId];
+
+  // Logic to determine which text to show (Story or Recipe)
+  const displayNarration = useMemo(() => {
+    if (currentScene?.isEnding && galleryIndex === 1 && currentScene.recipe) {
+      return currentScene.recipe;
+    }
+    return gameState.currentText;
+  }, [currentScene, galleryIndex, gameState.currentText]);
 
   // Landing Page Render
   if (!isStarted) {
@@ -359,14 +389,27 @@ const App: React.FC = () => {
               </div>
             ) : (
               <div className="animate-fade-in">
-                <span className="text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.4em] mb-4 block opacity-80">
-                  {currentScene?.isEnding ? 'You Have Reached...' : 'The Encounter'}
-                </span>
-                <h2 className="font-formal text-4xl md:text-5xl mb-4 text-white tracking-tight">
-                  {currentScene?.title}
-                </h2>
-                <p className="text-xl md:text-2xl leading-relaxed text-zinc-400 font-light font-formal italic">
-                  {gameState.currentText}
+                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
+                  <div>
+                    <span className="text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.4em] mb-4 block opacity-80">
+                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'You Have Reached...' : 'Ingridients') : 'The Encounter'}
+                    </span>
+                    <h2 className="font-formal text-4xl md:text-5xl text-white tracking-tight">
+                      {currentScene?.title}
+                    </h2>
+                  </div>
+                  
+                  {/* Rating Section for Endings */}
+                  {currentScene?.isEnding && galleryIndex === 1 && (currentScene.abv !== undefined || currentScene.sweetness !== undefined) && (
+                    <div className="flex gap-6 animate-fade-in">
+                      {currentScene.abv !== undefined && <Stars label="ABV" rating={currentScene.abv} />}
+                      {currentScene.sweetness !== undefined && <Stars label="Sweetness" rating={currentScene.sweetness} />}
+                    </div>
+                  )}
+                </div>
+                
+                <p className="text-xl md:text-2xl leading-relaxed text-zinc-400 font-light font-formal italic transition-all duration-500">
+                  {displayNarration}
                 </p>
               </div>
             )}

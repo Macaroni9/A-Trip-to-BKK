@@ -9,7 +9,7 @@ export const generateSceneContent = async (corePrompt: string): Promise<string> 
 };
 
 // Placeholder for the secondary image link to be updated later
-const SECONDARY_ENDING_IMAGE = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1920&auto=format&fit=crop";
+const DEFAULT_SECONDARY_ENDING_IMAGE = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1920&auto=format&fit=crop";
 
 // 2. IMAGE GENERATOR (Now supports returning multiple images for endings)
 export const generateSceneImage = async (sceneId: string): Promise<string | string[]> => {
@@ -96,9 +96,21 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       break;
   }
 
-  // If it's an ending, return both the primary and the secondary placeholder
+  // If it's an ending, return both the primary and the specific secondary drink image
   if (sceneId.endsWith('_ending')) {
-    return [primaryImage, SECONDARY_ENDING_IMAGE];
+    let secondaryImage = DEFAULT_SECONDARY_ENDING_IMAGE;
+
+    if (sceneId === 'khaosan_ending') {
+      secondaryImage = 'https://i.ibb.co/twQhgCys/khaosan.png';
+    } else if (sceneId === 'chao_phraya_ending') {
+      secondaryImage = 'https://i.ibb.co/hx9D5bZM/chao-phraya.png';
+    } else if (sceneId === 'jodd_fairs_ending') {
+      secondaryImage = 'https://i.ibb.co/BHnsGm3x/jodd.png';
+    } else if (sceneId === '711_sweets_ending') {
+      secondaryImage = 'https://i.ibb.co/spYq3JqT/7-11.png';
+    }
+
+    return [primaryImage, secondaryImage];
   }
 
   return primaryImage;
