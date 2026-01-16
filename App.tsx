@@ -53,28 +53,24 @@ const App: React.FC = () => {
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
   const [isSkipMenuOpen, setIsSkipMenuOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [pendingGalleryIndex, setPendingGalleryIndex] = useState<number | null>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
   
   // Real-time temperature state
   const [currentTemp, setCurrentTemp] = useState('32');
   const [tempSource, setTempSource] = useState<{ uri: string; title: string } | null>(null);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchRealTimeTemp = async () => {
       try {
-        // Direct fetch to Open-Meteo (No API Key needed)
         const response = await fetch(
           "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m&timezone=Asia%2FBangkok"
         );
-        
         if (!response.ok) throw new Error("Weather API failed");
-        
         const data = await response.json();
-        
-        // If we get a valid temperature
         if (data.current && data.current.temperature_2m !== undefined) {
           const temp = Math.round(data.current.temperature_2m).toString();
           setCurrentTemp(temp);
-          
           setTempSource({
             uri: "https://open-meteo.com",
             title: "Open-Meteo Weather Data"
@@ -84,26 +80,33 @@ const App: React.FC = () => {
         console.warn("Weather sync failed, using default (32°C).", error);
       }
     };
-    
     fetchRealTimeTemp();
-    // Refresh temperature every 30 minutes
     const interval = setInterval(fetchRealTimeTemp, 1800000);
     return () => clearInterval(interval);
   }, []);
 
-    
-  
+  // Effect to handle programmatic scrolling of the gallery
+  useEffect(() => {
+    if (!gameState.isGenerating && pendingGalleryIndex !== null && galleryRef.current) {
+      const container = galleryRef.current;
+      const width = container.offsetWidth;
+      container.scrollTo({ left: width * pendingGalleryIndex, behavior: 'auto' });
+      setGalleryIndex(pendingGalleryIndex);
+      setPendingGalleryIndex(null);
+    }
+  }, [gameState.isGenerating, pendingGalleryIndex, gameState.currentImageUrls]);
 
   const endings = useMemo(() => {
     return Object.values(STORY_DATA).filter(scene => scene.isEnding);
   }, []);
 
-  const loadScene = useCallback(async (sceneId: string, isBackNav: boolean = false) => {
+  const loadScene = useCallback(async (sceneId: string, isBackNav: boolean = false, initialIndex: number = 0) => {
     const scene = STORY_DATA[sceneId];
     if (!scene) return;
 
     setLoadingMsg(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
-    setGalleryIndex(0); // Reset gallery position
+    setGalleryIndex(initialIndex); 
+    setPendingGalleryIndex(initialIndex);
     
     setGameState(prev => ({ 
       ...prev, 
@@ -123,7 +126,6 @@ const App: React.FC = () => {
       });
 
       let [narration, images] = await Promise.all([textPromise, imagePromise]);
-
       const imageUrls = Array.isArray(images) ? images : [images || DEFAULT_IMAGE];
 
       setGameState(prev => {
@@ -161,23 +163,21 @@ const App: React.FC = () => {
 
   const handleBack = () => {
     if (gameState.history.length <= 1 || gameState.isGenerating) return;
-    
     const historyCopy = [...gameState.history];
     historyCopy.pop();
     const previousSceneId = historyCopy[historyCopy.length - 1];
-    
     setGameState(prev => ({
       ...prev,
       history: historyCopy
     }));
-    
     loadScene(previousSceneId, true);
   };
 
   const handleSkipToEnding = (endingId: string) => {
     setIsSkipMenuOpen(false);
     setIsStarted(true);
-    loadScene(endingId);
+    // Jump to the ending and default to the drink image (index 1)
+    loadScene(endingId, false, 1);
   };
 
   const restartToLanding = () => {
@@ -196,7 +196,6 @@ const App: React.FC = () => {
 
   const currentScene = STORY_DATA[gameState.currentSceneId];
 
-  // Logic to determine which text to show (Story or Recipe)
   const displayNarration = useMemo(() => {
     if (currentScene?.isEnding && galleryIndex === 1 && currentScene.recipe) {
       return currentScene.recipe;
@@ -204,7 +203,6 @@ const App: React.FC = () => {
     return gameState.currentText;
   }, [currentScene, galleryIndex, gameState.currentText]);
 
-  // Landing Page Render
   if (!isStarted) {
     return (
       <div className="min-h-screen bg-[#0c0c0e] text-zinc-100 flex flex-col items-center justify-center p-6 text-center">
@@ -285,10 +283,8 @@ const App: React.FC = () => {
     );
   }
 
-  // Active Game Render
   return (
     <div className="min-h-screen bg-[#0c0c0e] text-zinc-200 flex flex-col items-center p-4 md:p-10">
-      {/* Header */}
       <header className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-center mb-12 animate-fade-in gap-6">
         <div className="text-center md:text-left">
           <h1 className="text-lg tracking-[0.5em] font-formal font-bold text-white uppercase">
@@ -322,17 +318,18 @@ const App: React.FC = () => {
       </header>
 
       <main className="w-full max-w-5xl flex flex-col gap-10">
-        
-        {/* IMAGE CONTAINER / GALLERY */}
         <div className="relative aspect-[16/9] w-full rounded-[2.5rem] overflow-hidden bg-zinc-950 border border-zinc-800 shadow-[0_40px_100px_rgba(0,0,0,0.6)] group">
           {gameState.currentImageUrls && gameState.currentImageUrls.length > 0 && !gameState.isGenerating ? (
             <div className="w-full h-full relative">
               <div 
+                ref={galleryRef}
                 className="w-full h-full flex transition-transform duration-700 ease-in-out scrollbar-hide snap-x snap-mandatory overflow-x-auto"
                 onScroll={(e) => {
                   const scrollPos = e.currentTarget.scrollLeft;
                   const width = e.currentTarget.offsetWidth;
-                  setGalleryIndex(Math.round(scrollPos / width));
+                  if (width > 0) {
+                    setGalleryIndex(Math.round(scrollPos / width));
+                  }
                 }}
               >
                 {gameState.currentImageUrls.map((url, idx) => (
@@ -347,7 +344,6 @@ const App: React.FC = () => {
                 ))}
               </div>
 
-              {/* Gallery Controls for Multiple Images */}
               {gameState.currentImageUrls.length > 1 && (
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
                   <div className="flex gap-2">
@@ -361,10 +357,14 @@ const App: React.FC = () => {
                 </div>
               )}
 
-              {/* Swipe Indicator for Gallery */}
               {gameState.currentImageUrls.length > 1 && galleryIndex === 0 && (
                 <div className="absolute top-1/2 right-6 -translate-y-1/2 flex flex-col items-center text-white/40 pointer-events-none animate-pulse">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] [writing-mode:vertical-lr]">Swipe to Reveal</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] [writing-mode:vertical-lr]">Swipe for Spirit</span>
+                </div>
+              )}
+              {gameState.currentImageUrls.length > 1 && galleryIndex === 1 && (
+                <div className="absolute top-1/2 left-6 -translate-y-1/2 flex flex-col items-center text-white/40 pointer-events-none animate-pulse">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] [writing-mode:vertical-lr]">Swipe for Story</span>
                 </div>
               )}
             </div>
@@ -379,7 +379,6 @@ const App: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 pointer-events-none" />
         </div>
 
-        {/* NARRATIVE SECTION */}
         <div className="min-h-[140px] px-2 flex flex-col md:flex-row gap-8">
           <div className="flex-1 space-y-6">
             {gameState.isGenerating ? (
@@ -392,14 +391,13 @@ const App: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
                   <div>
                     <span className="text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.4em] mb-4 block opacity-80">
-                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'You Have Reached...' : 'Ingridients') : 'The Encounter'}
+                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'You Have Reached...' : 'The Ingredients') : 'The Encounter'}
                     </span>
                     <h2 className="font-formal text-4xl md:text-5xl text-white tracking-tight">
                       {currentScene?.title}
                     </h2>
                   </div>
                   
-                  {/* Rating Section for Endings */}
                   {currentScene?.isEnding && galleryIndex === 1 && (currentScene.abv !== undefined || currentScene.sweetness !== undefined) && (
                     <div className="flex gap-6 animate-fade-in">
                       {currentScene.abv !== undefined && <Stars label="ABV" rating={currentScene.abv} />}
@@ -416,7 +414,6 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* CHOICES GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
           {!gameState.isGenerating && currentScene?.choices.map((choice) => (
             <ChoiceButton 
@@ -442,7 +439,6 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* FOOTER STATS - Now moves with content */}
       <footer className="w-full max-w-5xl mt-20 pb-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-semibold tracking-[0.4em] uppercase text-zinc-600 border-t border-zinc-800/20 pt-10">
         <div className="flex flex-wrap justify-center gap-8">
           <span className="flex items-center gap-2">
@@ -477,7 +473,6 @@ const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* Skip Story Modal */}
       {isSkipMenuOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
           <div className="w-full max-w-2xl bg-[#0c0c0e] border border-zinc-800 rounded-3xl p-8 max-h-[90vh] overflow-y-auto shadow-2xl">

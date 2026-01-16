@@ -107,7 +107,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
     } else if (sceneId === 'jodd_fairs_ending') {
       secondaryImage = 'https://i.ibb.co/BHnsGm3x/jodd.png';
     } else if (sceneId === '711_sweets_ending') {
-      secondaryImage = 'https://i.ibb.co/spYq3JqT/7-11.png';
+      secondaryImage = 'https://i.ibb.co/Y4ZfyXpZ/0bbc5f38-6835-4058-8e66-efbaf5b518b6-original.png';
     }
 
     return [primaryImage, secondaryImage];
