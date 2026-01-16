@@ -101,7 +101,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
     let secondaryImage = DEFAULT_SECONDARY_ENDING_IMAGE;
 
     if (sceneId === 'khaosan_ending') {
-      secondaryImage = 'https://i.ibb.co/twQhgCys/khaosan.png';
+      secondaryImage = 'https://i.ibb.co/3y1Mx2TP/originally.png';
     } else if (sceneId === 'chao_phraya_ending') {
       secondaryImage = 'https://i.ibb.co/hx9D5bZM/chao-phraya.png';
     } else if (sceneId === 'jodd_fairs_ending') {

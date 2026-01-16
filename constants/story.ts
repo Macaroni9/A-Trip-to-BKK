@@ -81,7 +81,7 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'khaosan_ending',
     title: 'KHAOSAN REGRET',
     corePrompt: 'The music is deafening, the buckets are strong. You black out politely and wake up with glitter in your pocket and a smile on your face.',
-    recipe: 'Pisco, Gin, Coconut fat-washed Aperol, Passionfruit, Verjus, Sour Rainbow.',
+    recipe: 'Pisco, Gin, Coconut fat-washed Aperol, Strawberry, Verjus, Sour Rainbow.',
     abv: 4,
     sweetness: 2.5,
     choices: [],
