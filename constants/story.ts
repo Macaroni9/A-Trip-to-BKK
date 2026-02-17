@@ -82,7 +82,7 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'KHAOSAN REGRET',
     corePrompt: 'The music is deafening, the buckets are strong. You black out politely and wake up with glitter in your pocket and a smile on your face.',
     recipe: 'Pisco, Gin, Coconut fat-washed Aperol, Strawberry, Verjus, Sour Rainbow.',
-    abv: 4,
+    abv: 3,
     sweetness: 2.5,
     choices: [],
     isEnding: true
@@ -91,7 +91,7 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'jodd_fairs_ending',
     title: 'JODD FAIRS GLUTTONY',
     corePrompt: 'Surrounded by the glow of the night market. You sweat, you smile, and you pretend you can handle Thai spicy. Your soul feels seasoned.',
-    recipe: 'Reposado Tequila, Tropical Gin, Sherry, White Soy, Sake, Kombu, Mezcal, Salted Wasabi Pineapple Chip.',
+    recipe: 'Reposado Tequila, Tropical Gin, Sherry, White Soy, Sake, Kombu, Mezcal, Sushi Cracker.',
     abv: 4.5,
     sweetness: 2,
     choices: [],
@@ -101,7 +101,7 @@ export const STORY_DATA: Record<string, Scene> = {
     id: '711_sweets_ending',
     title: '7-ELEVEN SUGAR RUSH',
     corePrompt: 'You came for culture, but you stayed for the ham-and-cheese toasties and neon sugar. A pure, unadulterated Bangkok high.',
-    recipe: 'Aged Rum, Tea, Coconut & Palm Reduction, Jasmine, Creme De Cacao, Steam Cake.',
+    recipe: 'Spiced Rum, Tea, Coconut & Palm Reduction, Jasmine, Creme De Cacao, Yuzu Cranberry Biscotti.',
     abv: 3,
     sweetness: 3.5,
     choices: [],
@@ -111,6 +111,9 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'sukhumvit_ending',
     title: 'SUKHUMVIT AFTER DARK',
     corePrompt: 'Flashy, fruity, and dangerously confident—like Bangkok at 1:17 a.m. You’re ready to own the night.',
+    recipe: 'Saffron and Blue Pea Vodka, Tonka Tincture, Lychee, Prosecco, citrus.',
+    abv: 4,
+    sweetness: 3,
     choices: [],
     isEnding: true
   },
@@ -128,13 +131,19 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'hotel_lobby_ending',
     title: 'HOTEL LOBBY DRAMS',
     corePrompt: 'In the sanctuary of marble and air conditioning. You sit straighter. You tip better. You start saying “neat.” Classy move.',
+    recipe: 'Blended Scotch, Fernet Branca, Campari Cask Tales, Butterscotch, palo Cortado, Smoky malt, Comte Cheese.',
+    abv: 5,
+    sweetness: 0.5,
     choices: [],
     isEnding: true
   },
   'bts_skyline_ending': {
     id: 'bts_skyline_ending',
-    title: 'B(EER)TS SKYLINE',
+    title: 'BTS HIGHBALL',
     corePrompt: 'Clean, tall, and refreshing. The city moves fast outside the glass window as you glide above the traffic jams. Total efficiency.',
+    recipe: 'Reposado Tequila, Martini Bianco, Blue Curacao, Rose, Hops, Bubbles.',
+    abv: 4,
+    sweetness: 2,
     choices: [],
     isEnding: true
   },
@@ -142,13 +151,19 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'chatuchak_ending',
     title: 'LOST IN CHATUCHAK',
     corePrompt: 'A sweet-sour reward for surviving the heat, the crowds, and the intense bargaining. You found the perfect vintage shirt.',
+    recipe: 'Guava, Thai Chili, Jasmine, Tamarind, Bubbles.',
+    abv: 0,
+    sweetness: 2,
     choices: [],
     isEnding: true
   },
   'massage_ending': {
     id: 'massage_ending',
-    title: 'THAI MASSAGE RESET',
+    title: 'TEMPLE TOUR',
     corePrompt: 'You walk out lighter, hydrated, and emotionally unbothered. The city’s noise feels like a distant lullaby now.',
+    recipe: 'Mango, Coconut, Jasmine Rice, Pandan.',
+    abv: 0,
+    sweetness: 4,
     choices: [],
     isEnding: true
   }
