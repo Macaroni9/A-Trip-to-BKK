@@ -88,7 +88,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       break;
 
     case 'massage_ending': 
-      primaryImage = 'https://ibb.co/99TjhDLn';
+      primaryImage = 'https://i.ibb.co/4ZTx2qGW/c76fabe2-7f10-44ec-a2b9-c9c5ccbea8a9-7db7d965-7532-4036-8293-07ad270c8d0d-raw.png';
       break;
 
     default:
