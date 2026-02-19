@@ -108,6 +108,14 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       secondaryImage = 'https://i.ibb.co/C3C88TZJ/095880d2-41a5-439e-8a75-aa1333f73d0f-e74c4682-09ec-4541-a9a1-361630f1a930-raw.jpg';
     } else if (sceneId === '711_sweets_ending') {
       secondaryImage = 'https://i.ibb.co/0pfhbPws/c7192fee-cfa1-460a-9b83-99a4afd7f180-3ad42d54-4d5d-411e-976f-0f1d189cdfec-raw.jpg';
+    } else if (sceneId === 'sukhumvit_ending') {
+      secondaryImage = 'https://i.ibb.co/YMCrKtn/5b26b084-555d-466d-9b64-b1211627b18b-fae605c4-1303-4d7d-a054-dbaeaa78e772-raw.jpg';
+    } else if (sceneId === 'hotel_lobby_ending') {
+      secondaryImage = 'https://i.ibb.co/KjBQHCzW/8062aedc-ad30-4cef-9ab2-a01af5cab29a-7d013cfb-bf2f-44f3-9dba-79333ff35893-raw.jpg';
+    } else if (sceneId === 'bts_skyline_ending') {
+      secondaryImage = 'https://i.ibb.co/JFrT3x6D/fec4ed71-14db-4f6e-8b96-2aeb35aaf532-5da4ca9a-7a14-4216-8e30-cc7ad1f6087f-raw.jpg';
+    } else if (sceneId === 'massage_ending') {
+      secondaryImage = 'https://i.ibb.co/qLJ070Nr/94d432f7-e73c-437c-a661-eb4ace05c36b-0aa30bf0-d03b-4b54-976a-a00f06b6d632-raw.jpg';
     }
 
     return [primaryImage, secondaryImage];
