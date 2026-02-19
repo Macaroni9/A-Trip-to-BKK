@@ -103,7 +103,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
     if (sceneId === 'khaosan_ending') {
       secondaryImage = 'https://i.ibb.co/h1njp48Z/ccf9edb5-38d5-4bd2-92ed-3b411b920313-4b85d0dd-9179-4307-8b3f-bebff43cfde7-raw.jpg';
     } else if (sceneId === 'chao_phraya_ending') {
-      secondaryImage = 'https://i.ibb.co/hx9D5bZM/chao-phraya.png';
+      secondaryImage = 'https://i.ibb.co/nNqM76mB/b2801cbb-bc8a-4e23-ad36-7c4223292ced-5e48b495-4241-43b7-b5a2-cf1f36a22d4a-raw.jpg';
     } else if (sceneId === 'jodd_fairs_ending') {
       secondaryImage = 'https://i.ibb.co/C3C88TZJ/095880d2-41a5-439e-8a75-aa1333f73d0f-e74c4682-09ec-4541-a9a1-361630f1a930-raw.jpg';
     } else if (sceneId === '711_sweets_ending') {
@@ -114,6 +114,8 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       secondaryImage = 'https://i.ibb.co/KjBQHCzW/8062aedc-ad30-4cef-9ab2-a01af5cab29a-7d013cfb-bf2f-44f3-9dba-79333ff35893-raw.jpg';
     } else if (sceneId === 'bts_skyline_ending') {
       secondaryImage = 'https://i.ibb.co/JFrT3x6D/fec4ed71-14db-4f6e-8b96-2aeb35aaf532-5da4ca9a-7a14-4216-8e30-cc7ad1f6087f-raw.jpg';
+    } else if (sceneId === 'chatuchak_ending') {
+      secondaryImage = 'https://i.ibb.co/CKKSH62T/2a7fbf60-563b-41dd-bbb1-7c0e0930975e-62bc1e0e-379d-4945-a917-e1dbb5c2bbfa-raw.jpg';
     } else if (sceneId === 'massage_ending') {
       secondaryImage = 'https://i.ibb.co/qLJ070Nr/94d432f7-e73c-437c-a661-eb4ace05c36b-0aa30bf0-d03b-4b54-976a-a00f06b6d632-raw.jpg';
     }
