@@ -60,10 +60,10 @@ export const STORY_DATA: Record<string, Scene> = {
   },
   '4B': {
     id: '4B',
-    title: 'Temple Day Discovery',
-    corePrompt: 'The spires of Wat Arun glisten in the sun. It’s majestic, spiritual, and incredibly hot. How are we moving?',
+    title: 'Out on Foot',
+    corePrompt: 'The city unfolds one street at a time. You can rise above it all for something quick and crisp, or wander toward temples and weekend markets — every step a different rhythm. How are we moving?',
     choices: [
-      { id: 'c13', text: '“River Boat / BTS / Easy Ride—Keep it Crisp.”', nextSceneId: 'bts_skyline_ending' },
+      { id: 'c13', text: '“Quick Ride—Keep it Crisp.”', nextSceneId: 'bts_skyline_ending' },
       { id: 'c14', text: '“Too Hot. I need a non-alcohol reset first.”', nextSceneId: '5B' }
     ]
   },
@@ -73,7 +73,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'Your senses are overloaded. You need to ground yourself before the next adventure.',
     choices: [
       { id: 'c15', text: '“Iconic tourist-proof: Market & Hustle.”', nextSceneId: 'chatuchak_ending' },
-      { id: 'c16', text: '“I want to be reborn: Spa / Massage / Calm.”', nextSceneId: 'massage_ending' }
+      { id: 'c16', text: '“I want to be where the bells echo, seeking stillness.”', nextSceneId: 'massage_ending' }
     ]
   },
   // ENDINGS

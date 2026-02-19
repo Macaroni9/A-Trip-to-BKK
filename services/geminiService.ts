@@ -51,7 +51,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       break;
 
     case '5B': 
-      primaryImage = 'https://i.ibb.co/cKxk0Wmg/original-7.png';
+      primaryImage = 'https://i.ibb.co/MQkG0k1/original-7.png';
       break;
 
     // --- ENDINGS (DRINKS) ---
