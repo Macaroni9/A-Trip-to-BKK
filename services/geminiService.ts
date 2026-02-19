@@ -101,13 +101,13 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
     let secondaryImage = DEFAULT_SECONDARY_ENDING_IMAGE;
 
     if (sceneId === 'khaosan_ending') {
-      secondaryImage = 'https://i.ibb.co/3y1Mx2TP/originally.png';
+      secondaryImage = 'https://i.ibb.co/h1njp48Z/ccf9edb5-38d5-4bd2-92ed-3b411b920313-4b85d0dd-9179-4307-8b3f-bebff43cfde7-raw.jpg';
     } else if (sceneId === 'chao_phraya_ending') {
       secondaryImage = 'https://i.ibb.co/hx9D5bZM/chao-phraya.png';
     } else if (sceneId === 'jodd_fairs_ending') {
-      secondaryImage = 'https://i.ibb.co/BKCq6Njf/originally-1.png';
+      secondaryImage = 'https://i.ibb.co/C3C88TZJ/095880d2-41a5-439e-8a75-aa1333f73d0f-e74c4682-09ec-4541-a9a1-361630f1a930-raw.jpg';
     } else if (sceneId === '711_sweets_ending') {
-      secondaryImage = 'https://i.ibb.co/Y4ZfyXpZ/0bbc5f38-6835-4058-8e66-efbaf5b518b6-original.png';
+      secondaryImage = 'https://i.ibb.co/0pfhbPws/c7192fee-cfa1-460a-9b83-99a4afd7f180-3ad42d54-4d5d-411e-976f-0f1d189cdfec-raw.jpg';
     }
 
     return [primaryImage, secondaryImage];
