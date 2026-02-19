@@ -83,7 +83,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'The music is deafening, the buckets are strong. You black out politely and wake up with glitter in your pocket and a smile on your face.',
     recipe: 'Pisco, Gin, Coconut fat-washed Aperol, Strawberry, Verjus, Sour Rainbow.',
     abv: 3,
-    sweetness: 2.5,
+    sweetness: 2,
     choices: [],
     isEnding: true
   },
@@ -92,7 +92,7 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'JODD FAIRS GLUTTONY',
     corePrompt: 'Surrounded by the glow of the night market. You sweat, you smile, and you pretend you can handle Thai spicy. Your soul feels seasoned.',
     recipe: 'Reposado Tequila, Tropical Gin, Sherry, White Soy, Sake, Kombu, Mezcal, Sushi Cracker.',
-    abv: 4.5,
+    abv: 4,
     sweetness: 2,
     choices: [],
     isEnding: true
@@ -103,7 +103,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'You came for culture, but you stayed for the ham-and-cheese toasties and neon sugar. A pure, unadulterated Bangkok high.',
     recipe: 'Spiced Rum, Tea, Coconut & Palm Reduction, Jasmine Rice, Creme De Cacao, Yuzu Cranberry Biscotti.',
     abv: 3,
-    sweetness: 3.5,
+    sweetness: 4,
     choices: [],
     isEnding: true
   },
@@ -112,7 +112,7 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'SUKHUMVIT AFTER DARK',
     corePrompt: 'Flashy, fruity, and dangerously confident—like Bangkok at 1:17 a.m. You’re ready to own the night.',
     recipe: 'Saffron and Blue Pea Vodka, Tonka Tincture, Lychee, Prosecco, Clear Lemon.',
-    abv: 4,
+    abv: 3,
     sweetness: 3,
     choices: [],
     isEnding: true
@@ -122,7 +122,7 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'SUNSET AT CHAO PHRAYA',
     corePrompt: 'The sky is a palette of orange and purple. For exactly one drink, you are the main character of a high-budget travel vlog.',
     recipe: 'Bergamot, Peach, St.Germain, Earl Grey, Grapefruit Soda.',
-    abv: 1.5,
+    abv: 1,
     sweetness: 2,
     choices: [],
     isEnding: true
@@ -133,7 +133,7 @@ export const STORY_DATA: Record<string, Scene> = {
     corePrompt: 'In the sanctuary of marble and air conditioning. You sit straighter. You tip better. You start saying “neat.” Classy move.',
     recipe: 'Blended Scotch, Fernet Branca, Campari Cask Tales, Butterscotch, Palo Cortado, Smoky Malt, Comte Cheese.',
     abv: 5,
-    sweetness: 0.5,
+    sweetness: 1,
     choices: [],
     isEnding: true
   },
@@ -159,7 +159,7 @@ export const STORY_DATA: Record<string, Scene> = {
   },
   'massage_ending': {
     id: 'massage_ending',
-    title: 'TEMPLE TOUR',
+    title: 'TEMPLE RUN',
     corePrompt: 'You step through the gates: mango sun, jasmine whispers, pandan warmth, and a soft coconut hush—history welcomes you.',
     recipe: 'Mango, Coconut, Jasmine Rice, Pandan, Chocolate.',
     abv: 0,
