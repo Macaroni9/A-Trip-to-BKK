@@ -30,11 +30,11 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       break;
     
     case '3A': 
-      primaryImage = 'https://i.ibb.co/YT8MkFsd/original-2.png';
+      primaryImage = 'https://i.ibb.co/FPsTF5K/2129c426-6e5d-42ef-8ed3-9b3e1f93c6e4-55559514-bde5-4433-a2eb-6fa1222f9ac5-raw.jpg';
       break;
 
     case '4A': 
-      primaryImage = 'https://i.ibb.co/G4b1g8Lx/original-3.png';
+      primaryImage = 'https://i.ibb.co/RTHFQXBn/af4591c8-a1d4-474b-96a1-6b44678b5252-ba50134b-9ce0-42b1-8999-9fe061fb5188-raw.jpg';
       break;
 
     // --- PATH B (MOVIE / CALM) ---
@@ -72,7 +72,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       break;
 
     case 'sukhumvit_ending': 
-      primaryImage = 'https://i.ibb.co/xSmnwMZT/original-12.png';
+      primaryImage = 'https://i.ibb.co/VWn22Dsc/4658fda3-d8d6-451c-a23c-56d1d6fcdf80-723b340c-051c-48e0-ba63-0c8f65b11290-raw.jpg';
       break;
 
     case 'hotel_lobby_ending': 

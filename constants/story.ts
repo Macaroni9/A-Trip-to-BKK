@@ -24,7 +24,7 @@ export const STORY_DATA: Record<string, Scene> = {
   '3A': {
     id: '3A',
     title: 'First Proper Bite',
-    corePrompt: 'The air is thick with the scent of grilled pork and lemongrass. Street vendors are busy, and the crowd is massive.',
+    corePrompt: 'The air is thick with the scent of grilled pork, noodle shops. Street vendors are busy, you can hear the 7 11 door chime every now and then.',
     choices: [
       { id: 'c5', text: 'Street food carnival—smoke, Spice, Crowd.', nextSceneId: 'jodd_fairs_ending' },
       { id: 'c6', text: 'Craving for Dessert or fruits.', nextSceneId: '4A' }
