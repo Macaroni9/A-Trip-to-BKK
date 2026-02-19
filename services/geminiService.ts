@@ -39,7 +39,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
 
     // --- PATH B (MOVIE / CALM) ---
     case '2B': 
-      primaryImage = 'https://i.ibb.co/Y4pY4CfS/original-4.png';
+      primaryImage = 'https://i.ibb.co/yB0VjBMY/f262f1c3-996b-49b5-85f8-cdd19a1e0c8b-570352bc-4795-4005-af67-7e5cfbc95275-raw.jpg';
       break;
 
     case '3B': 
@@ -68,7 +68,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       break;
 
     case '711_sweets_ending': 
-      primaryImage = 'https://i.ibb.co/rfpGbGgq/original-11.png';
+      primaryImage = 'https://i.ibb.co/k6kJPnq5/56748010-831a-408f-942f-11a84a3f4dfc-bef65272-595b-4499-a912-5959a7b69488-raw.jpg';
       break;
 
     case 'sukhumvit_ending': 
