@@ -315,10 +315,23 @@ const App: React.FC = () => {
 
   const downloadShareImage = () => {
     if (!shareImage) return;
-    const link = document.createElement('a');
-    link.href = shareImage;
-    link.download = `bangkok-quest-${currentScene?.id}.png`;
-    link.click();
+    
+    // For mobile browsers, especially in iframes, standard link download might fail
+    // We can try opening the image in a new tab as a fallback
+    try {
+      const link = document.createElement('a');
+      link.href = shareImage;
+      link.download = `bangkok-quest-${currentScene?.id || 'result'}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('Download failed, opening in new tab instead', err);
+      const newTab = window.open();
+      if (newTab) {
+        newTab.document.write(`<img src="${shareImage}" style="width:100%" />`);
+      }
+    }
   };
 
   const restartToLanding = () => {
@@ -671,39 +684,23 @@ const App: React.FC = () => {
               </div>
               
               <div className="text-center space-y-8 flex-shrink-0">
-                <span className="text-3xl text-arcade-secondary uppercase tracking-[0.5em]">Your Spirit Drink</span>
+                <span className="text-3xl text-arcade-secondary uppercase tracking-[0.5em]">I ended up with</span>
                 <h2 className="text-8xl font-bold tracking-tight leading-tight">{currentScene.title}</h2>
               </div>
 
-              <div className="w-full grid grid-cols-2 gap-10 bg-white/5 p-16 rounded-[60px] border border-white/10 flex-shrink-0">
-                <div className="flex flex-col items-center gap-4">
-                  <span className="text-3xl text-zinc-500 uppercase tracking-widest">ABV</span>
-                  <div className="flex gap-2">
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i} className={`text-6xl ${i < (currentScene.abv || 0) ? 'text-red-600' : 'text-zinc-800'}`}>❤</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex flex-col items-center gap-4">
-                  <span className="text-3xl text-zinc-500 uppercase tracking-widest">Sweetness</span>
-                  <div className="flex gap-2">
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i} className={`text-6xl ${i < (currentScene.sweetness || 0) ? 'text-red-600' : 'text-zinc-800'}`}>❤</span>
-                    ))}
-                  </div>
+              <div className="w-full flex flex-col items-center gap-10 bg-white/5 p-16 rounded-[60px] border border-white/10 flex-shrink-0">
+                <div className="text-center max-w-[900px]">
+                  <p className="text-3xl text-zinc-500 uppercase tracking-[0.3em] mb-6">Stats</p>
+                  <p className="text-4xl text-white leading-relaxed tracking-wide font-medium">
+                    {currentScene.recipe}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="w-full flex flex-col items-center gap-10 flex-shrink-0">
+            <div className="w-full flex flex-col items-center gap-10 flex-shrink-0 pb-10">
               <div className="w-full h-2 bg-arcade-accent/20 rounded-full" />
-              <div className="text-center max-w-[900px]">
-                <p className="text-2xl text-zinc-500 uppercase tracking-[0.3em] mb-4">Ingredients</p>
-                <p className="text-4xl text-white leading-relaxed tracking-wide font-medium">
-                  {currentScene.recipe}
-                </p>
-              </div>
-              <div className="mt-6 text-3xl font-bold text-arcade-accent tracking-[0.2em]">
+              <div className="text-xl font-bold text-arcade-accent tracking-[0.4em] opacity-80">
                 Bangkok Quest at Lebua
               </div>
             </div>
