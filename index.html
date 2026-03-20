@@ -6,23 +6,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A Trip to Bangkok</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'arcade-accent': 'var(--arcade-accent)',
+              'arcade-secondary': 'var(--arcade-secondary)',
+              'arcade-choice': 'var(--arcade-choice)',
+            },
+            fontFamily: {
+              arcade: ['"Press Start 2P"', 'cursive'],
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
       :root {
-        --bg-color: #0c0c0e;
-        --accent-gold: #d4af37;
+        --bg-color: #020202;
+        --accent-gold: #fff01f;
+        --arcade-accent: #ffffff;
+        --arcade-secondary: #ff00e0;
+        --arcade-choice: #00f3ff;
       }
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: 'VT323', monospace;
         background-color: var(--bg-color);
         color: #e5e5e5;
-        letter-spacing: -0.01em;
+        font-size: 1.25rem;
+        line-height: 1.4;
+      }
+      .font-arcade {
+        font-family: 'Press Start 2P', cursive;
+        letter-spacing: 0.05em;
+      }
+      
+      /* Glitch Effect */
+      .glitch-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .glitch {
+        position: relative;
+        color: white;
+        mix-blend-mode: lighten;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        width: 100%;
+        background: black;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      .glitch::before {
+        left: -2px;
+        text-shadow: 2px 0 #ff00e0;
+        animation: glitch-anim-1 2s infinite linear alternate-reverse;
+      }
+
+      .glitch::after {
+        left: 2px;
+        text-shadow: -2px 0 #00f3ff;
+        animation: glitch-anim-2 3s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitch-anim-1 {
+        0% { clip: rect(30px, 9999px, 10px, 0); }
+        5% { clip: rect(70px, 9999px, 40px, 0); }
+        10% { clip: rect(20px, 9999px, 60px, 0); }
+        15% { clip: rect(90px, 9999px, 20px, 0); }
+        20% { clip: rect(40px, 9999px, 80px, 0); }
+        25% { clip: rect(10px, 9999px, 30px, 0); }
+        30% { clip: rect(80px, 9999px, 50px, 0); }
+        35% { clip: rect(50px, 9999px, 90px, 0); }
+        40% { clip: rect(20px, 9999px, 10px, 0); }
+        45% { clip: rect(60px, 9999px, 40px, 0); }
+        50% { clip: rect(10px, 9999px, 70px, 0); }
+        55% { clip: rect(90px, 9999px, 20px, 0); }
+        60% { clip: rect(30px, 9999px, 80px, 0); }
+        65% { clip: rect(70px, 9999px, 40px, 0); }
+        70% { clip: rect(20px, 9999px, 60px, 0); }
+        75% { clip: rect(90px, 9999px, 10px, 0); }
+        80% { clip: rect(40px, 9999px, 70px, 0); }
+        85% { clip: rect(10px, 9999px, 30px, 0); }
+        90% { clip: rect(80px, 9999px, 50px, 0); }
+        95% { clip: rect(50px, 9999px, 90px, 0); }
+        100% { clip: rect(20px, 9999px, 10px, 0); }
+      }
+
+      @keyframes glitch-anim-2 {
+        0% { clip: rect(10px, 9999px, 30px, 0); }
+        5% { clip: rect(80px, 9999px, 50px, 0); }
+        10% { clip: rect(50px, 9999px, 90px, 0); }
+        15% { clip: rect(20px, 9999px, 10px, 0); }
+        20% { clip: rect(60px, 9999px, 40px, 0); }
+        25% { clip: rect(10px, 9999px, 70px, 0); }
+        30% { clip: rect(90px, 9999px, 20px, 0); }
+        35% { clip: rect(30px, 9999px, 80px, 0); }
+        40% { clip: rect(70px, 9999px, 40px, 0); }
+        45% { clip: rect(20px, 9999px, 60px, 0); }
+        50% { clip: rect(90px, 9999px, 10px, 0); }
+        55% { clip: rect(40px, 9999px, 70px, 0); }
+        60% { clip: rect(10px, 9999px, 30px, 0); }
+        65% { clip: rect(80px, 9999px, 50px, 0); }
+        70% { clip: rect(50px, 9999px, 90px, 0); }
+        75% { clip: rect(20px, 9999px, 10px, 0); }
+        80% { clip: rect(60px, 9999px, 40px, 0); }
+        85% { clip: rect(10px, 9999px, 70px, 0); }
+        90% { clip: rect(90px, 9999px, 20px, 0); }
+        95% { clip: rect(30px, 9999px, 80px, 0); }
+        100% { clip: rect(70px, 9999px, 40px, 0); }
       }
       .font-formal {
-        font-family: 'Bodoni Moda', serif;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.8rem;
       }
       .accent-border {
-        border-color: rgba(212, 175, 55, 0.2);
+        border-color: var(--arcade-secondary);
+        border-width: 2px;
+        box-shadow: 0 0 10px var(--arcade-secondary);
       }
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
@@ -39,6 +151,32 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+      /* Arcade specific styles */
+      .arcade-button {
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid currentColor;
+        box-shadow: 4px 4px 0 currentColor;
+        transition: all 0.1s;
+      }
+      .arcade-button:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--arcade-accent);
+      }
+      .scanline {
+        width: 100%;
+        height: 100px;
+        z-index: 9999;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+        opacity: 0.1;
+        position: fixed;
+        bottom: 100%;
+        animation: scanline 10s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes scanline {
+        0% { bottom: 100%; }
+        100% { bottom: -100px; }
+      }
     </style>
   <script type="importmap">
 {
@@ -50,9 +188,9 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body>
+    <div class="scanline"></div>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

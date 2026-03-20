@@ -13,19 +13,18 @@ export const ChoiceButton: React.FC<ChoiceButtonProps> = ({ text, onClick, disab
       onClick={onClick}
       disabled={disabled}
       className={`
-        w-full text-left p-6 rounded-2xl border border-zinc-800/50
-        transition-all duration-500 group relative overflow-hidden
-        ${disabled ? 'opacity-30 cursor-not-allowed shadow-none' : 'hover:border-fuchsia-500/50 hover:bg-zinc-900/30 hover:shadow-[0_10px_30px_rgba(217,70,239,0.05)] active:scale-[0.98]'}
+        w-full text-left p-6 border border-white/10 bg-white/5 backdrop-blur-sm
+        transition-all duration-300 group relative overflow-hidden rounded-xl
+        ${disabled ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white/10 hover:border-arcade-choice/50 hover:shadow-[0_0_20px_rgba(0,243,255,0.15)] active:scale-[0.98]'}
       `}
     >
-      <div className="flex items-center gap-4 relative z-10">
-        <div className="w-1.5 h-1.5 rounded-full bg-zinc-800 group-hover:bg-fuchsia-500 transition-all duration-500 group-hover:scale-150 group-hover:shadow-[0_0_10px_#d946ef]" />
-        <span className="text-zinc-400 group-hover:text-white font-medium text-lg leading-snug transition-colors duration-300">
+      <div className="flex items-center justify-center relative z-10">
+        <span className="text-zinc-400 group-hover:text-white font-arcade text-lg md:text-xl leading-snug transition-colors duration-300 text-center w-full uppercase tracking-wider">
           {text}
         </span>
       </div>
-      {/* Hover Background Accent */}
-      <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/0 via-fuchsia-500/[0.02] to-cyan-500/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Subtle glow line */}
+      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-arcade-choice/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </button>
   );
 };
