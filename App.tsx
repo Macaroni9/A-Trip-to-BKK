@@ -4,6 +4,8 @@ import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
+import { Instagram, Share2, Download, CheckCircle2 } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 const LOADING_MESSAGES = [
   "Calling a Win Bike...",
@@ -107,7 +109,10 @@ const App: React.FC = () => {
   const [isSkipMenuOpen, setIsSkipMenuOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [pendingGalleryIndex, setPendingGalleryIndex] = useState<number | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
   const galleryRef = useRef<HTMLDivElement>(null);
+  const shareCardRef = useRef<HTMLDivElement>(null);
   
   // Real-time temperature state
   const [currentTemp, setCurrentTemp] = useState('32');
@@ -257,6 +262,51 @@ const App: React.FC = () => {
     setIsStarted(true);
     // Jump to the ending and default to the drink image (index 1)
     loadScene(endingId, false, 1);
+  };
+
+  const handleShare = async () => {
+    if (!shareCardRef.current || isSharing) return;
+    
+    setIsSharing(true);
+    try {
+      // Small delay to ensure images are fully rendered
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const canvas = await html2canvas(shareCardRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: '#080c14',
+        logging: false,
+      });
+      
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('Failed to create image');
+
+      const file = new File([blob], 'bangkok-quest-result.png', { type: 'image/png' });
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Bangkok Quest Result',
+          text: `I just finished my Bangkok Quest! My spirit drink is: ${currentScene?.title}`,
+        });
+      } else {
+        // Fallback: Download
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `bangkok-quest-${currentScene?.id}.png`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+      
+      setShareSuccess(true);
+      setTimeout(() => setShareSuccess(false), 3000);
+    } catch (error) {
+      console.error('Share error:', error);
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   const restartToLanding = () => {
@@ -549,6 +599,29 @@ const App: React.FC = () => {
           
           {currentScene?.isEnding && !gameState.isGenerating && (
             <div className="col-span-full flex flex-col items-center mt-12 py-20 border-t border-white/5 bg-white/[0.02] rounded-3xl backdrop-blur-sm">
+              {galleryIndex === 1 && (
+                <div className="mb-10 flex flex-col items-center animate-fade-in">
+                  <button 
+                    onClick={handleShare}
+                    disabled={isSharing}
+                    className="group flex flex-col items-center gap-2 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 group-hover:border-white/20 transition-all">
+                      {isSharing ? (
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : shareSuccess ? (
+                        <CheckCircle2 className="w-5 h-5 text-arcade-secondary" />
+                      ) : (
+                        <Instagram className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+                      )}
+                    </div>
+                    <span className="text-[8px] font-arcade text-zinc-500 uppercase tracking-[0.2em] group-hover:text-zinc-300 transition-colors">
+                      {isSharing ? 'Capturing...' : shareSuccess ? 'Shared!' : 'Share to Story'}
+                    </span>
+                  </button>
+                </div>
+              )}
+
               <span className="text-zinc-500 mb-8 uppercase tracking-[0.5em] text-[10px] font-arcade">QUEST COMPLETE</span>
               <button 
                 onClick={restartToLanding}
@@ -560,6 +633,63 @@ const App: React.FC = () => {
           )}
         </div>
       </main>
+
+      {/* Hidden Share Card for Screenshot */}
+      {currentScene?.isEnding && (
+        <div className="fixed left-[-9999px] top-0 pointer-events-none">
+          <div 
+            ref={shareCardRef}
+            style={{ width: '1080px', height: '1920px', boxSizing: 'border-box' }}
+            className="bg-[#080c14] p-20 flex flex-col items-center justify-between text-white font-arcade overflow-hidden"
+          >
+            <div className="w-full flex flex-col items-center gap-10 flex-shrink-0">
+              <h1 className="text-6xl font-bold tracking-[0.2em] text-arcade-accent">BANGKOK QUEST</h1>
+              <div className="w-full h-2 bg-arcade-accent/20 rounded-full" />
+            </div>
+
+            <div className="w-full flex flex-col items-center gap-16 flex-grow justify-center">
+              <div className="w-[800px] h-[800px] rounded-[60px] overflow-hidden border-8 border-white/10 shadow-2xl flex-shrink-0">
+                <img 
+                  src={gameState.currentImageUrls[1] || DEFAULT_IMAGE} 
+                  alt="Spirit Drink" 
+                  className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
+                />
+              </div>
+              
+              <div className="text-center space-y-8 flex-shrink-0">
+                <span className="text-3xl text-arcade-secondary uppercase tracking-[0.5em]">Your Spirit Drink</span>
+                <h2 className="text-8xl font-bold tracking-tight leading-tight">{currentScene.title}</h2>
+              </div>
+
+              <div className="w-full grid grid-cols-2 gap-10 bg-white/5 p-16 rounded-[60px] border border-white/10 flex-shrink-0">
+                <div className="flex flex-col items-center gap-4">
+                  <span className="text-3xl text-zinc-500 uppercase tracking-widest">ABV</span>
+                  <div className="flex gap-2">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className={`text-6xl ${i < (currentScene.abv || 0) ? 'text-red-600' : 'text-zinc-800'}`}>❤</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-4">
+                  <span className="text-3xl text-zinc-500 uppercase tracking-widest">Sweetness</span>
+                  <div className="flex gap-2">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className={`text-6xl ${i < (currentScene.sweetness || 0) ? 'text-red-600' : 'text-zinc-800'}`}>❤</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full flex flex-col items-center gap-10 flex-shrink-0">
+              <div className="w-full h-2 bg-arcade-accent/20 rounded-full" />
+              <p className="text-3xl text-zinc-500 tracking-[0.3em]">SCAN TO START YOUR QUEST</p>
+              <div className="text-2xl text-arcade-accent opacity-60">@BANGKOKQUEST</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="w-full max-w-5xl mt-20 pb-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-arcade uppercase text-zinc-600 border-t-2 border-zinc-800 pt-10">
         <div className="flex flex-wrap justify-center gap-8">
