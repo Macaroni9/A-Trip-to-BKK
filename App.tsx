@@ -349,10 +349,12 @@ const App: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="flex flex-col items-center gap-6">
+            <div className="w-full h-full flex items-center justify-center p-4">
+              <div className="flex flex-col items-center gap-6 w-full">
                 <div className="w-12 h-12 border-t-4 border-white rounded-full animate-spin opacity-60" />
-                <p className="text-xs font-arcade tracking-[0.4em] text-white uppercase">{loadingMsg}</p>
+                <p className="text-[9px] md:text-[11px] font-arcade tracking-[0.3em] text-white uppercase text-center whitespace-nowrap overflow-visible">
+                  {loadingMsg}
+                </p>
               </div>
             </div>
           )}
