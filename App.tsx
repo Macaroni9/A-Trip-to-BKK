@@ -111,6 +111,7 @@ const App: React.FC = () => {
   const [pendingGalleryIndex, setPendingGalleryIndex] = useState<number | null>(null);
   const [isSharing, setIsSharing] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
+  const [shareImage, setShareImage] = useState<string | null>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const shareCardRef = useRef<HTMLDivElement>(null);
   
@@ -270,43 +271,54 @@ const App: React.FC = () => {
     setIsSharing(true);
     try {
       // Small delay to ensure images are fully rendered
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       const canvas = await html2canvas(shareCardRef.current, {
         useCORS: true,
         scale: 2,
         backgroundColor: '#080c14',
         logging: false,
+        allowTaint: true,
+        imageTimeout: 15000,
       });
       
+      const dataUrl = canvas.toDataURL('image/png');
+      setShareImage(dataUrl);
+
+      // Try native share if available
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
-      if (!blob) throw new Error('Failed to create image');
-
-      const file = new File([blob], 'bangkok-quest-result.png', { type: 'image/png' });
-
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'Bangkok Quest Result',
-          text: `I just finished my Bangkok Quest! My spirit drink is: ${currentScene?.title}`,
-        });
-      } else {
-        // Fallback: Download
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `bangkok-quest-${currentScene?.id}.png`;
-        link.click();
-        URL.revokeObjectURL(url);
+      if (blob && navigator.share && navigator.canShare) {
+        const file = new File([blob], 'bangkok-quest.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            // This is the closest we can get to Spotify-like sharing in a web app
+            // It triggers the native share sheet, where the user can select Instagram Stories
+            await navigator.share({
+              files: [file],
+              title: 'Bangkok Quest',
+              text: `My Bangkok Spirit: ${currentScene?.title}`,
+            });
+            setShareSuccess(true);
+            setTimeout(() => setShareSuccess(false), 3000);
+            return; 
+          } catch (shareErr) {
+            console.log('Native share failed', shareErr);
+          }
+        }
       }
-      
-      setShareSuccess(true);
-      setTimeout(() => setShareSuccess(false), 3000);
     } catch (error) {
       console.error('Share error:', error);
     } finally {
       setIsSharing(false);
     }
+  };
+
+  const downloadShareImage = () => {
+    if (!shareImage) return;
+    const link = document.createElement('a');
+    link.href = shareImage;
+    link.download = `bangkok-quest-${currentScene?.id}.png`;
+    link.click();
   };
 
   const restartToLanding = () => {
@@ -512,6 +524,7 @@ const App: React.FC = () => {
                       src={url} 
                       alt={`Scene Image ${idx + 1}`} 
                       className="w-full h-full object-cover animate-fade-in"
+                      crossOrigin="anonymous"
                       onError={(e) => { e.currentTarget.src = DEFAULT_IMAGE; }}
                     />
                   </div>
@@ -648,11 +661,11 @@ const App: React.FC = () => {
             </div>
 
             <div className="w-full flex flex-col items-center gap-16 flex-grow justify-center">
-              <div className="w-[800px] h-[800px] rounded-[60px] overflow-hidden border-8 border-white/10 shadow-2xl flex-shrink-0">
+              <div className="w-[920px] aspect-[16/9] rounded-[40px] overflow-hidden border-8 border-white/10 shadow-2xl flex-shrink-0 relative">
                 <img 
                   src={gameState.currentImageUrls[1] || DEFAULT_IMAGE} 
                   alt="Spirit Drink" 
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
                   crossOrigin="anonymous"
                 />
               </div>
@@ -684,8 +697,44 @@ const App: React.FC = () => {
 
             <div className="w-full flex flex-col items-center gap-10 flex-shrink-0">
               <div className="w-full h-2 bg-arcade-accent/20 rounded-full" />
-              <p className="text-3xl text-zinc-500 tracking-[0.3em]">SCAN TO START YOUR QUEST</p>
-              <div className="text-2xl text-arcade-accent opacity-60">@BANGKOKQUEST</div>
+              <div className="text-center max-w-[900px]">
+                <p className="text-2xl text-zinc-500 uppercase tracking-[0.3em] mb-4">Ingredients</p>
+                <p className="text-4xl text-white leading-relaxed tracking-wide font-medium">
+                  {currentScene.recipe}
+                </p>
+              </div>
+              <div className="mt-6 text-3xl font-bold text-arcade-accent tracking-[0.2em]">
+                Bangkok Quest at Lebua
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Share Preview Modal for Mobile Fallback */}
+      {shareImage && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-fade-in">
+          <div className="w-full max-w-sm flex flex-col items-center gap-6">
+            <div className="w-full aspect-[9/16] bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+              <img src={shareImage} alt="Share Preview" className="w-full h-full object-contain" />
+            </div>
+            <div className="text-center space-y-2">
+              <p className="text-white font-arcade text-xs uppercase tracking-widest">Hold image to save</p>
+              <p className="text-zinc-500 text-[9px] uppercase tracking-widest">Then share to your story</p>
+            </div>
+            <div className="flex gap-4 w-full">
+              <button 
+                onClick={downloadShareImage}
+                className="flex-1 py-3 bg-white text-black font-arcade text-[10px] rounded-full uppercase tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Download className="w-3 h-3" /> Save Image
+              </button>
+              <button 
+                onClick={() => setShareImage(null)}
+                className="flex-1 py-3 bg-zinc-800 text-white font-arcade text-[10px] rounded-full uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
