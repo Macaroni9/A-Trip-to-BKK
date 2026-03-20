@@ -16,6 +16,57 @@ const LOADING_MESSAGES = [
 
 const DEFAULT_IMAGE = "https://i.ibb.co/JjVp3qBp/original-17.png";
 
+const TukTukIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 64 64" className={className}>
+    {/* Exhaust Smoke Particles - More defined puffs */}
+    <circle className="smoke-particle" cx="6" cy="40" r="3" fill="#666" style={{ animationDelay: '0s' }} />
+    <circle className="smoke-particle" cx="6" cy="40" r="2.5" fill="#888" style={{ animationDelay: '0.2s' }} />
+    <circle className="smoke-particle" cx="6" cy="40" r="3.5" fill="#999" style={{ animationDelay: '0.4s' }} />
+    <circle className="smoke-particle" cx="6" cy="40" r="2" fill="#aaa" style={{ animationDelay: '0.6s' }} />
+
+    {/* Body - Navy Blue (Pixel Art Style) */}
+    <rect x="12" y="32" width="40" height="12" fill="#1a3a8a" />
+    <rect x="52" y="32" width="8" height="8" fill="#1a3a8a" />
+    
+    {/* Mudguards - Yellow */}
+    <rect x="10" y="40" width="12" height="4" fill="#ffcc00" />
+    <rect x="42" y="40" width="12" height="4" fill="#ffcc00" />
+    
+    {/* Roof - Blackish Grey */}
+    <path d="M10 8 L50 8 L54 20 L6 20 Z" fill="#2a2a2a" />
+    <rect x="25" y="4" width="4" height="4" fill="#666" /> {/* Antenna/Top detail */}
+    
+    {/* Roof Supports - Yellow */}
+    <rect x="12" y="20" width="2" height="12" fill="#ffcc00" />
+    <rect x="30" y="20" width="2" height="12" fill="#ffcc00" />
+    <rect x="48" y="20" width="2" height="12" fill="#ffcc00" />
+    
+    {/* Seats - Red */}
+    <rect x="18" y="28" width="10" height="4" fill="#cc0000" />
+    <rect x="34" y="28" width="14" height="4" fill="#cc0000" />
+    <rect x="44" y="24" width="4" height="4" fill="#cc0000" />
+    
+    {/* Handlebar */}
+    <rect x="50" y="28" width="4" height="2" fill="#000" />
+    
+    {/* Windshield Area - Light Blue */}
+    <rect x="50" y="20" width="4" height="8" fill="#88ccff" opacity="0.6" />
+    
+    {/* Wheels - Detailed Pixel Style */}
+    <circle cx="16" cy="48" r="7" fill="#000" />
+    <circle cx="16" cy="48" r="4" fill="#888" />
+    <circle cx="16" cy="48" r="2" fill="#ffcc00" />
+    
+    <circle cx="48" cy="48" r="7" fill="#000" />
+    <circle cx="48" cy="48" r="4" fill="#888" />
+    <circle cx="48" cy="48" r="2" fill="#ffcc00" />
+    
+    {/* Headlight - Red/Yellow Accent */}
+    <rect x="58" y="34" width="4" height="4" fill="#ff0000" />
+    <rect x="60" y="35" width="2" height="2" fill="#ffff00" />
+  </svg>
+);
+
 const Hearts: React.FC<{ rating: number; label: string }> = ({ rating, label }) => {
   const fullHearts = Math.floor(rating);
   const hasHalf = rating % 1 !== 0;
@@ -51,6 +102,8 @@ const App: React.FC = () => {
   });
 
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
+  const [isStarting, setIsStarting] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [isSkipMenuOpen, setIsSkipMenuOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [pendingGalleryIndex, setPendingGalleryIndex] = useState<number | null>(null);
@@ -152,8 +205,34 @@ const App: React.FC = () => {
   }, []);
 
   const startGame = () => {
-    setIsStarted(true);
-    loadScene('start');
+    if (isStarting) return;
+    setIsStarting(true);
+    
+    // Start loading the first scene in the background immediately
+    // This allows the TukTuk animation to act as the loading screen
+    const sceneLoadPromise = loadScene('start');
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+      // Slightly slower progress to give AI more time to generate the first scene
+      progress += Math.random() * 10; 
+      if (progress >= 100) {
+        progress = 100;
+        setLoadingProgress(100);
+        clearInterval(interval);
+        
+        // Wait for the scene to finish loading before transitioning
+        sceneLoadPromise.then(() => {
+          setTimeout(() => {
+            setIsStarted(true);
+            setIsStarting(false);
+            setLoadingProgress(0);
+          }, 600);
+        });
+      } else {
+        setLoadingProgress(Math.floor(progress));
+      }
+    }, 150);
   };
 
   const handleChoice = (nextId: string) => {
@@ -234,13 +313,54 @@ const App: React.FC = () => {
           </div>
 
           <div className="pt-8 flex flex-col items-center gap-6">
-            <button 
-              onClick={startGame}
-              className="group relative px-20 py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-full overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-arcade-choice/20 to-arcade-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="relative z-10">INITIATE QUEST</span>
-            </button>
+            <div className="relative w-full max-w-[340px]">
+              {/* TukTuk Animation - Positioned outside/above the button, moves inside when starting */}
+              <div 
+                className={`absolute transition-all duration-300 ease-in-out z-20 ${isStarting ? 'vibrate-active weave' : 'vibrate-idle'}`}
+                style={{ 
+                  left: isStarting ? `${Math.max(8, Math.min(loadingProgress, 92))}%` : '1.5rem',
+                  top: isStarting ? '50%' : '-32px', 
+                  opacity: 1,
+                  transform: isStarting ? 'translate(-50%, -50%)' : 'none',
+                  pointerEvents: 'none'
+                }}
+              >
+                <TukTukIcon className="w-12 h-12 drop-shadow-[0_0_8px_rgba(26,58,138,0.5)]" />
+              </div>
+
+              <button 
+                onClick={startGame}
+                disabled={isStarting}
+                className="group relative w-full py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-full overflow-hidden"
+              >
+                {/* Road Lines Animation - Single row synced with loading */}
+                {isStarting && (
+                  <div className="absolute inset-0 flex items-center pointer-events-none">
+                    <div 
+                      className="flex gap-4 w-[200%] road-line"
+                      style={{ 
+                        animationDuration: `${Math.max(0.3, 1.2 - (loadingProgress / 100))}s` 
+                      }}
+                    >
+                      {[...Array(20)].map((_, i) => (
+                        <div key={i} className="h-0.5 w-8 bg-black/10 rounded-full shrink-0" />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Loading Percentage */}
+                {isStarting && (
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-arcade text-black/40 animate-pulse">
+                    {loadingProgress}%
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-gradient-to-r from-arcade-choice/20 to-arcade-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                {!isStarting && <span className="relative z-10">INITIATE QUEST</span>}
+              </button>
+            </div>
+            
             <button 
               onClick={() => setIsSkipMenuOpen(true)}
               className="text-[10px] font-arcade text-zinc-500 hover:text-white transition-colors tracking-[0.2em]"

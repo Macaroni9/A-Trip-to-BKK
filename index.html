@@ -177,6 +177,45 @@
         0% { bottom: 100%; }
         100% { bottom: -100px; }
       }
+      @keyframes vibrate-idle {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-0.4px) rotate(0.1deg); }
+        75% { transform: translateY(0.4px) rotate(-0.1deg); }
+      }
+      @keyframes vibrate-active {
+        0%, 100% { transform: translateY(0) scale(1); }
+        25% { transform: translateY(-1px) translateX(0.5px) scale(1.01); }
+        75% { transform: translateY(1px) translateX(-0.5px) scale(0.99); }
+      }
+      @keyframes weave {
+        0%, 100% { margin-top: 0; }
+        25% { margin-top: -15px; }
+        75% { margin-top: 15px; }
+      }
+      @keyframes smoke-puff {
+        0% { transform: translate(0, 0) scale(0.2); opacity: 0; }
+        10% { opacity: 0.6; }
+        100% { transform: translate(-40px, -10px) scale(2.5); opacity: 0; }
+      }
+      .vibrate-idle {
+        animation: vibrate-idle 0.15s linear infinite;
+      }
+      .vibrate-active {
+        animation: vibrate-active 0.08s linear infinite;
+      }
+      .weave {
+        animation: weave 2s ease-in-out infinite;
+      }
+      .smoke-particle {
+        animation: smoke-puff 0.8s ease-out infinite;
+      }
+      @keyframes road-lines {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+      }
+      .road-line {
+        animation: road-lines 0.8s linear infinite;
+      }
     </style>
   <script type="importmap">
 {
