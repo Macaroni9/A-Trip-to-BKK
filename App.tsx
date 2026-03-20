@@ -4,7 +4,7 @@ import { STORY_DATA } from './constants/story';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
-import { Instagram, Share2, Download, CheckCircle2 } from 'lucide-react';
+import { Instagram, Share2, Download, CheckCircle2, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const LOADING_MESSAGES = [
@@ -313,23 +313,47 @@ const App: React.FC = () => {
     }
   };
 
-  const downloadShareImage = () => {
+  const downloadShareImage = async () => {
     if (!shareImage) return;
     
-    // For mobile browsers, especially in iframes, standard link download might fail
-    // We can try opening the image in a new tab as a fallback
+    // Try to use the Share API first as it's the most reliable way to "save" on mobile
+    if (navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch(shareImage);
+        const blob = await response.blob();
+        const file = new File([blob], 'bangkok-quest.png', { type: 'image/png' });
+        
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'Bangkok Quest',
+            text: 'My Bangkok Spirit Drink Result',
+          });
+          return;
+        }
+      } catch (err) {
+        console.error('Share API failed in download function', err);
+      }
+    }
+
+    // Fallback for desktop or if Share API fails: standard download
     try {
       const link = document.createElement('a');
       link.href = shareImage;
-      link.download = `bangkok-quest-${currentScene?.id || 'result'}.png`;
+      link.download = `bangkok-quest-result.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (err) {
-      console.error('Download failed, opening in new tab instead', err);
+      console.error('Standard download failed', err);
+      // Last resort: open in new tab
       const newTab = window.open();
       if (newTab) {
-        newTab.document.write(`<img src="${shareImage}" style="width:100%" />`);
+        newTab.document.write(`
+          <body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;">
+            <img src="${shareImage}" style="max-width:100%;height:auto;" />
+          </body>
+        `);
       }
     }
   };
@@ -710,27 +734,43 @@ const App: React.FC = () => {
 
       {/* Share Preview Modal for Mobile Fallback */}
       {shareImage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-fade-in">
-          <div className="w-full max-w-sm flex flex-col items-center gap-6">
-            <div className="w-full aspect-[9/16] bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-              <img src={shareImage} alt="Share Preview" className="w-full h-full object-contain" />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-sm flex flex-col items-center gap-6 my-auto relative">
+            {/* Top Close Button */}
+            <button 
+              onClick={() => setShareImage(null)}
+              className="absolute -top-12 right-0 p-2 text-white/40 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="w-full aspect-[9/16] bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10 relative group">
+              <img 
+                src={shareImage} 
+                alt="Share Preview" 
+                className="w-full h-full object-contain" 
+                onContextMenu={(e) => e.stopPropagation()} // Allow native long-press
+              />
+              <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <p className="text-[8px] text-white/60 text-center uppercase tracking-widest">Hold image to save to photos</p>
+              </div>
             </div>
             <div className="text-center space-y-2">
-              <p className="text-white font-arcade text-xs uppercase tracking-widest">Hold image to save</p>
-              <p className="text-zinc-500 text-[9px] uppercase tracking-widest">Then share to your story</p>
+              <p className="text-white font-arcade text-[10px] uppercase tracking-widest animate-pulse">Ready to Share</p>
+              <p className="text-zinc-500 text-[8px] uppercase tracking-widest">Tap "Save to Device" or hold the photo</p>
             </div>
-            <div className="flex gap-4 w-full">
+            <div className="flex flex-col gap-3 w-full">
               <button 
                 onClick={downloadShareImage}
-                className="flex-1 py-3 bg-white text-black font-arcade text-[10px] rounded-full uppercase tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="w-full py-4 bg-white text-black font-arcade text-[10px] rounded-xl uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
               >
-                <Download className="w-3 h-3" /> Save Image
+                <Download className="w-4 h-4" /> Save to Device
               </button>
               <button 
                 onClick={() => setShareImage(null)}
-                className="flex-1 py-3 bg-zinc-800 text-white font-arcade text-[10px] rounded-full uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+                className="w-full py-4 bg-zinc-800 text-white font-arcade text-[10px] rounded-xl uppercase tracking-[0.2em] hover:bg-zinc-700 transition-all flex items-center justify-center gap-3"
               >
-                Close
+                Back to Result
               </button>
             </div>
           </div>
