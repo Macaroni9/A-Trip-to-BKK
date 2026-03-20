@@ -178,14 +178,14 @@
         100% { bottom: -100px; }
       }
       @keyframes vibrate-idle {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        25% { transform: translateY(-0.4px) rotate(0.1deg); }
-        75% { transform: translateY(0.4px) rotate(-0.1deg); }
+        0%, 100% { transform: translateX(0) rotate(0deg); }
+        25% { transform: translateX(-0.4px) rotate(0.1deg); }
+        75% { transform: translateX(0.4px) rotate(-0.1deg); }
       }
       @keyframes vibrate-active {
-        0%, 100% { transform: translateY(0) scale(1); }
-        25% { transform: translateY(-1px) translateX(0.5px) scale(1.01); }
-        75% { transform: translateY(1px) translateX(-0.5px) scale(0.99); }
+        0%, 100% { transform: translateX(0) scale(1); }
+        25% { transform: translateX(0.5px) scale(1.01); }
+        75% { transform: translateX(-0.5px) scale(0.99); }
       }
       @keyframes weave {
         0%, 100% { margin-top: 0; }
@@ -213,8 +213,24 @@
         0% { transform: translateX(100%); }
         100% { transform: translateX(-100%); }
       }
+      @keyframes buildings-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-33.33%); }
+      }
+      @keyframes nyan-run {
+        0% { transform: translateX(-200px); }
+        15% { transform: translateX(70vw); }
+        85% { transform: translateX(70vw); }
+        100% { transform: translateX(calc(100vw + 200px)); }
+      }
       .road-line {
         animation: road-lines 0.8s linear infinite;
+      }
+      .animate-buildings-scroll {
+        animation: buildings-scroll 8s linear infinite;
+      }
+      .animate-nyan {
+        animation: nyan-run 5s ease-in-out forwards;
       }
     </style>
   <script type="importmap">

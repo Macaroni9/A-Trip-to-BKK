@@ -18,6 +18,77 @@ const LOADING_MESSAGES = [
 
 const DEFAULT_IMAGE = "https://i.ibb.co/JjVp3qBp/original-17.png";
 
+const WatArunIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 64 100" className={className} fill="currentColor">
+    <path d="M32 0 L40 20 L32 15 L24 20 Z" />
+    <rect x="28" y="20" width="8" height="10" />
+    <path d="M20 30 L44 30 L40 50 L24 50 Z" />
+    <rect x="15" y="50" width="34" height="10" />
+    <path d="M10 60 L54 60 L50 90 L14 90 Z" />
+    <rect x="5" y="90" width="54" height="10" />
+  </svg>
+);
+
+const LebuaIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 60 120" className={className} fill="currentColor">
+    <rect x="10" y="30" width="40" height="90" />
+    <circle cx="30" cy="25" r="12" fill="#FFD700" />
+    <rect x="15" y="40" width="5" height="70" fill="rgba(255,255,255,0.2)" />
+    <rect x="25" y="40" width="5" height="70" fill="rgba(255,255,255,0.2)" />
+    <rect x="35" y="40" width="5" height="70" fill="rgba(255,255,255,0.2)" />
+    <rect x="45" y="40" width="5" height="70" fill="rgba(255,255,255,0.2)" />
+  </svg>
+);
+
+const MahanakhonIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 50 130" className={className} fill="currentColor">
+    <rect x="10" y="0" width="30" height="130" />
+    {/* Pixelated cutouts */}
+    <rect x="25" y="20" width="15" height="10" fill="black" />
+    <rect x="10" y="40" width="10" height="15" fill="black" />
+    <rect x="20" y="70" width="20" height="10" fill="black" />
+    <rect x="10" y="90" width="15" height="15" fill="black" />
+  </svg>
+);
+
+const NyanCat: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
+  if (!isRunning) return null;
+  return (
+    <div className="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
+      <div className="absolute top-1/2 -translate-y-1/2 animate-nyan flex items-center">
+        {/* Rainbow Trail */}
+        <div className="relative flex flex-col h-12 w-[2000px] -ml-[2000px]">
+          <div className="flex-1 bg-[#ff0000]" />
+          <div className="flex-1 bg-[#ff9900]" />
+          <div className="flex-1 bg-[#ffff00]" />
+          <div className="flex-1 bg-[#33ff00]" />
+          <div className="flex-1 bg-[#0099ff]" />
+          <div className="flex-1 bg-[#6633ff]" />
+          {/* Text on the trail */}
+          <div className="absolute inset-0 flex items-center justify-end pr-10">
+            <span className="text-white font-arcade text-[10px] whitespace-nowrap drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] uppercase">
+              Alright Hackerman..okay :(
+            </span>
+          </div>
+        </div>
+        {/* Cat Body */}
+        <div className="relative w-16 h-12 bg-[#ffccff] border-2 border-black rounded-lg flex items-center justify-center">
+          <div className="w-10 h-6 bg-[#ff3399] rounded-sm" />
+          {/* Head */}
+          <div className="absolute -right-4 top-1 w-8 h-8 bg-[#999999] border-2 border-black rounded-md">
+            <div className="absolute left-1 top-2 w-1.5 h-1.5 bg-black rounded-full" />
+            <div className="absolute right-1 top-2 w-1.5 h-1.5 bg-black rounded-full" />
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-1 w-2 h-1 bg-pink-400 rounded-full" />
+          </div>
+          {/* Feet */}
+          <div className="absolute -bottom-1 left-2 w-3 h-2 bg-[#999999] border border-black rounded-full" />
+          <div className="absolute -bottom-1 right-2 w-3 h-2 bg-[#999999] border border-black rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TukTukIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 64 64" className={className}>
     {/* Exhaust Smoke Particles - More defined puffs */}
@@ -107,6 +178,7 @@ const App: React.FC = () => {
   const [isStarting, setIsStarting] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isSkipMenuOpen, setIsSkipMenuOpen] = useState(false);
+  const [isNyanRunning, setIsNyanRunning] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [pendingGalleryIndex, setPendingGalleryIndex] = useState<number | null>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -381,9 +453,18 @@ const App: React.FC = () => {
     return gameState.currentText;
   }, [currentScene, galleryIndex, gameState.currentText]);
 
+  const handleBypassClick = () => {
+    setIsNyanRunning(true);
+    setTimeout(() => {
+      setIsNyanRunning(false);
+      setIsSkipMenuOpen(true);
+    }, 5000);
+  };
+
   if (!isStarted) {
     return (
       <div className="min-h-screen bg-[#080c14] text-zinc-100 flex flex-col items-center justify-center p-6 text-center">
+        <NyanCat isRunning={isNyanRunning} />
         <div className="max-w-3xl w-full space-y-12 animate-fade-in">
           <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-8 shadow-2xl">
             <img 
@@ -413,18 +494,38 @@ const App: React.FC = () => {
 
           <div className="pt-8 flex flex-col items-center gap-6">
             <div className="relative w-full max-w-[340px]">
-              {/* TukTuk Animation - Positioned outside/above the button, moves inside when starting */}
+              {/* Scrolling Buildings - Positioned above the button */}
+              {isStarting && (
+                <div className="absolute bottom-[100%] left-0 w-full h-32 pointer-events-none overflow-hidden mb-[-4px]">
+                  <div 
+                    className="absolute inset-0 flex items-end justify-around w-[300%] animate-buildings-scroll"
+                    style={{ animationDuration: '8s' }}
+                  >
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-end gap-20 px-10">
+                        <WatArunIcon className="w-12 h-16 text-white/10" />
+                        <LebuaIcon className="w-10 h-20 text-white/10" />
+                        <MahanakhonIcon className="w-8 h-24 text-white/10" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TukTuk Animation - Positioned on the top edge of the button */}
               <div 
-                className={`absolute transition-all duration-300 ease-in-out z-20 ${isStarting ? 'vibrate-active weave' : 'vibrate-idle'}`}
+                className="absolute transition-all duration-300 ease-in-out z-20"
                 style={{ 
                   left: isStarting ? `${Math.max(8, Math.min(loadingProgress, 92))}%` : '1.5rem',
-                  top: isStarting ? '50%' : '-32px', 
+                  top: '0', 
                   opacity: 1,
-                  transform: isStarting ? 'translate(-50%, -50%)' : 'none',
+                  transform: 'translate(-50%, -92%)',
                   pointerEvents: 'none'
                 }}
               >
-                <TukTukIcon className="w-12 h-12 drop-shadow-[0_0_8px_rgba(26,58,138,0.5)]" />
+                <div className={isStarting ? 'vibrate-active' : 'vibrate-idle'}>
+                  <TukTukIcon className="w-12 h-12 drop-shadow-[0_0_8px_rgba(26,58,138,0.5)]" />
+                </div>
               </div>
 
               <button 
@@ -432,22 +533,6 @@ const App: React.FC = () => {
                 disabled={isStarting}
                 className="group relative w-full py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-full overflow-hidden"
               >
-                {/* Road Lines Animation - Single row synced with loading */}
-                {isStarting && (
-                  <div className="absolute inset-0 flex items-center pointer-events-none">
-                    <div 
-                      className="flex gap-4 w-[200%] road-line"
-                      style={{ 
-                        animationDuration: `${Math.max(0.3, 1.2 - (loadingProgress / 100))}s` 
-                      }}
-                    >
-                      {[...Array(20)].map((_, i) => (
-                        <div key={i} className="h-0.5 w-8 bg-black/10 rounded-full shrink-0" />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Loading Percentage */}
                 {isStarting && (
                   <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-arcade text-black/40 animate-pulse">
@@ -461,7 +546,7 @@ const App: React.FC = () => {
             </div>
             
             <button 
-              onClick={() => setIsSkipMenuOpen(true)}
+              onClick={handleBypassClick}
               className="text-[10px] font-arcade text-zinc-500 hover:text-white transition-colors tracking-[0.2em]"
             >
               [ BYPASS TO ENDINGS ]
@@ -474,7 +559,7 @@ const App: React.FC = () => {
             <div className="w-full max-w-2xl bg-black border-4 border-arcade-accent p-8 max-h-[90vh] overflow-y-auto shadow-[0_0_50px_var(--arcade-accent)]">
               <div className="flex justify-between items-center mb-10">
                 <div>
-                  <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">SELECT LEVEL</h2>
+                  <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">CHEAT LIST</h2>
                   <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Direct access to all cocktail reveals</p>
                 </div>
                 <button 
@@ -614,7 +699,7 @@ const App: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
                   <div>
                     <span className="text-arcade-accent text-[10px] font-arcade uppercase tracking-[0.4em] mb-4 block opacity-80">
-                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'LEVEL COMPLETE' : 'DRINK STATS') : 'CURRENT SCENE'}
+                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'LEVEL COMPLETE' : 'DRINK STATS') : ''}
                     </span>
                     <h2 className="font-arcade text-2xl md:text-3xl text-white tracking-tight">
                       {currentScene?.title}
@@ -816,7 +901,7 @@ const App: React.FC = () => {
           <div className="w-full max-w-2xl bg-black border-4 border-arcade-accent p-8 max-h-[90vh] overflow-y-auto shadow-[0_0_50px_var(--arcade-accent)]">
             <div className="flex justify-between items-center mb-10">
               <div>
-                <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">SELECT LEVEL</h2>
+                <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">CHEAT LIST</h2>
                 <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-arcade">Jump to your final spirit</p>
               </div>
               <button 
