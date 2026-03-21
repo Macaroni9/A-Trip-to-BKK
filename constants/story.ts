@@ -7,8 +7,8 @@ export const STORY_DATA: Record<string, Scene> = {
     title: 'Touchdown in Suvarnabhumi',
     corePrompt: 'The humidity hits you like a warm hug as you step out of the airport. The smell of jet fuel and orchids fills the air. Bangkok is waiting.',
     choices: [
-      { id: 'c1', text: 'Drop my bags and chase chaos.', nextSceneId: '2A' },
-      { id: 'c2', text: 'Sabai Sabai; I want Bangkok to feel like a movie.', nextSceneId: '2B' }
+      { id: 'c1', text: 'Drop my bags and chase chaos', nextSceneId: '2A' },
+      { id: 'c2', text: 'Sabai Sabai; I want Bangkok to feel like a movie', nextSceneId: '2B' }
     ]
   },
   // CHAOS PATH
