@@ -218,10 +218,13 @@
         100% { transform: translateX(-33.33%); }
       }
       @keyframes nyan-run {
-        0% { transform: translateX(-200px); }
-        15% { transform: translateX(70vw); }
-        85% { transform: translateX(70vw); }
-        100% { transform: translateX(calc(100vw + 200px)); }
+        0% { transform: translateX(-100vw); }
+        50% { transform: translateX(150vw); }
+        100% { transform: translateX(400vw); }
+      }
+      @keyframes nyan-trail-wave {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(10px); }
       }
       .road-line {
         animation: road-lines 0.8s linear infinite;
@@ -230,7 +233,10 @@
         animation: buildings-scroll 8s linear infinite;
       }
       .animate-nyan {
-        animation: nyan-run 5s ease-in-out forwards;
+        animation: nyan-run 4s ease-in forwards;
+      }
+      .animate-nyan-trail {
+        animation: nyan-trail-wave 0.4s step-end infinite;
       }
     </style>
   <script type="importmap">

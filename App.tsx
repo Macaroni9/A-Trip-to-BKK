@@ -57,32 +57,37 @@ const NyanCat: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
     <div className="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
       <div className="absolute top-1/2 -translate-y-1/2 animate-nyan flex items-center">
         {/* Rainbow Trail */}
-        <div className="relative flex flex-col h-12 w-[2000px] -ml-[2000px]">
+        <div className="relative flex flex-col h-16 w-[200vw] -ml-[200vw]">
           <div className="flex-1 bg-[#ff0000]" />
           <div className="flex-1 bg-[#ff9900]" />
           <div className="flex-1 bg-[#ffff00]" />
           <div className="flex-1 bg-[#33ff00]" />
           <div className="flex-1 bg-[#0099ff]" />
           <div className="flex-1 bg-[#6633ff]" />
-          {/* Text on the trail */}
-          <div className="absolute inset-0 flex items-center justify-end pr-10">
-            <span className="text-white font-arcade text-[10px] whitespace-nowrap drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] uppercase">
-              Alright Hackerman..okay :(
+          {/* Text on the trail - Centered on the trail */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span 
+              className="text-white font-arcade text-lg font-bold whitespace-nowrap tracking-widest"
+              style={{ 
+                textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000' 
+              }}
+            >
+              HACKERMAN
             </span>
           </div>
         </div>
         {/* Cat Body */}
-        <div className="relative w-16 h-12 bg-[#ffccff] border-2 border-black rounded-lg flex items-center justify-center">
-          <div className="w-10 h-6 bg-[#ff3399] rounded-sm" />
+        <div className="relative w-20 h-16 bg-[#ffccff] border-4 border-black rounded-xl flex items-center justify-center">
+          <div className="w-12 h-8 bg-[#ff3399] rounded-sm" />
           {/* Head */}
-          <div className="absolute -right-4 top-1 w-8 h-8 bg-[#999999] border-2 border-black rounded-md">
-            <div className="absolute left-1 top-2 w-1.5 h-1.5 bg-black rounded-full" />
-            <div className="absolute right-1 top-2 w-1.5 h-1.5 bg-black rounded-full" />
-            <div className="absolute left-1/2 -translate-x-1/2 bottom-1 w-2 h-1 bg-pink-400 rounded-full" />
+          <div className="absolute -right-6 top-1 w-10 h-10 bg-[#999999] border-4 border-black rounded-lg">
+            <div className="absolute left-1.5 top-2.5 w-2 h-2 bg-black rounded-full" />
+            <div className="absolute right-1.5 top-2.5 w-2 h-2 bg-black rounded-full" />
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-1.5 w-3 h-1.5 bg-pink-400 rounded-full" />
           </div>
           {/* Feet */}
-          <div className="absolute -bottom-1 left-2 w-3 h-2 bg-[#999999] border border-black rounded-full" />
-          <div className="absolute -bottom-1 right-2 w-3 h-2 bg-[#999999] border border-black rounded-full" />
+          <div className="absolute -bottom-1.5 left-3 w-4 h-3 bg-[#999999] border-2 border-black rounded-full" />
+          <div className="absolute -bottom-1.5 right-3 w-4 h-3 bg-[#999999] border-2 border-black rounded-full" />
         </div>
       </div>
     </div>
@@ -458,7 +463,7 @@ const App: React.FC = () => {
     setTimeout(() => {
       setIsNyanRunning(false);
       setIsSkipMenuOpen(true);
-    }, 5000);
+    }, 4000);
   };
 
   if (!isStarted) {
@@ -560,7 +565,7 @@ const App: React.FC = () => {
               <div className="flex justify-between items-center mb-10">
                 <div>
                   <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">CHEAT LIST</h2>
-                  <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Direct access to all cocktail reveals</p>
+                  <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-arcade">Direct access to all cocktail reveals</p>
                 </div>
                 <button 
                   onClick={() => setIsSkipMenuOpen(false)}
@@ -576,7 +581,6 @@ const App: React.FC = () => {
                     onClick={() => handleSkipToEnding(ending.id)}
                     className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left"
                   >
-                    <span className="block text-[10px] text-arcade-secondary uppercase font-arcade mb-2 opacity-70">Ending</span>
                     <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors">{ending.title}</span>
                   </button>
                 ))}
@@ -902,7 +906,7 @@ const App: React.FC = () => {
             <div className="flex justify-between items-center mb-10">
               <div>
                 <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">CHEAT LIST</h2>
-                <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-arcade">Jump to your final spirit</p>
+                <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-arcade">Direct access to all cocktail reveals</p>
               </div>
               <button 
                 onClick={() => setIsSkipMenuOpen(false)}
@@ -919,7 +923,6 @@ const App: React.FC = () => {
                   onClick={() => handleSkipToEnding(ending.id)}
                   className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left"
                 >
-                  <span className="block text-[10px] text-arcade-secondary uppercase font-arcade mb-2 opacity-60">Result</span>
                   <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors leading-tight">{ending.title}</span>
                 </button>
               ))}
