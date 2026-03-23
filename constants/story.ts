@@ -111,7 +111,7 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'sukhumvit_ending',
     title: 'SUKHUMVIT AFTER DARK',
     corePrompt: 'Flashy, fruity, and dangerously confident—like Bangkok at 1:17 a.m. You’re ready to own the night.',
-    recipe: 'Saffron and Blue Pea Vodka, Tonka Tincture, Lychee, Prosecco, Clear Lemon.',
+    recipe: 'Saffron and Blue Pea Vodka, Tonka Tincture, Lychee, Prosecco.',
     abv: 3,
     sweetness: 3,
     choices: [],
