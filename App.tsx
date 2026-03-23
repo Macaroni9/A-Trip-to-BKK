@@ -868,7 +868,7 @@ const App: React.FC = () => {
       )}
 
       <footer className="w-full max-w-5xl mt-20 pb-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-arcade uppercase text-zinc-600 border-t-2 border-zinc-800 pt-10">
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-wrap justify-center gap-8 order-2 md:order-1">
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-arcade-accent/40" />
             LAT: 13.7214
@@ -877,6 +877,8 @@ const App: React.FC = () => {
             <span className="w-2 h-2 bg-arcade-accent/40" />
             LON: 100.5169
           </span>
+        </div>
+        <div className="flex flex-wrap justify-center gap-8 order-1 md:order-2">
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-arcade-accent/40" />
             TEMP: {currentTemp}C
@@ -892,8 +894,6 @@ const App: React.FC = () => {
               </a>
             )}
           </span>
-        </div>
-        <div className="flex gap-8">
           <span className="flex items-center gap-2">
             <span className={`w-2 h-2 transition-colors duration-500 ${gameState.isGenerating ? 'bg-arcade-secondary animate-pulse' : 'bg-arcade-accent/50'}`} />
             MOOD: {gameState.isGenerating ? 'SHIFTING' : 'STABLE'}
