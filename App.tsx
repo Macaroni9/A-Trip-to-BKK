@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { STORY_DATA } from './constants/story';
+import { StoryAnimation } from './components/StoryAnimation';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
@@ -709,9 +710,12 @@ const App: React.FC = () => {
                     <span className="text-arcade-accent text-[10px] font-arcade uppercase tracking-[0.4em] mb-4 block opacity-80">
                       {currentScene?.isEnding ? (galleryIndex === 0 ? 'LEVEL COMPLETE' : 'DRINK STATS') : ''}
                     </span>
-                    <h2 className={`font-arcade text-2xl md:text-3xl text-white tracking-tight ${currentScene?.isEnding ? 'animate-arcade-neon' : ''}`}>
-                      {currentScene?.title}
-                    </h2>
+                    <div className="flex items-center gap-4">
+                      <h2 className={`font-arcade text-2xl md:text-3xl text-white tracking-tight ${currentScene?.isEnding ? 'animate-arcade-neon' : ''}`}>
+                        {currentScene?.title}
+                      </h2>
+                      {currentScene && <StoryAnimation title={currentScene.title} />}
+                    </div>
                   </div>
                   
                   {currentScene?.isEnding && galleryIndex === 1 && (currentScene.abv !== undefined || currentScene.sweetness !== undefined) && (
@@ -801,8 +805,11 @@ const App: React.FC = () => {
               </div>
               
               <div className="text-center space-y-6 flex-shrink-0">
-                <span className="text-3xl text-arcade-secondary uppercase tracking-[0.5em]">I ended up with</span>
-                <h2 className="text-8xl font-bold tracking-tight leading-tight">{currentScene.title}</h2>
+                <span className="text-3xl text-arcade-secondary uppercase tracking-[0.5em]">I'm Drinking</span>
+                <div className="flex flex-col items-center gap-6">
+                  <h2 className="text-8xl font-bold tracking-tight leading-tight">{currentScene.title}</h2>
+                  <StoryAnimation title={currentScene.title} size="lg" />
+                </div>
               </div>
 
               <div className="w-full flex flex-col items-center gap-8 bg-white/5 p-16 rounded-[60px] border border-white/10 flex-shrink-0">
