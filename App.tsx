@@ -357,6 +357,12 @@ const App: React.FC = () => {
         logging: false,
         allowTaint: true,
         imageTimeout: 15000,
+        width: 1080,
+        height: 1920,
+        windowWidth: 1080,
+        windowHeight: 1920,
+        scrollX: 0,
+        scrollY: 0,
       });
       
       const dataUrl = canvas.toDataURL('image/png');
@@ -500,31 +506,29 @@ const App: React.FC = () => {
           <div className="pt-8 flex flex-col items-center gap-6">
             <div className="relative w-full max-w-[340px]">
               {/* Scrolling Buildings - Positioned above the button */}
-              {isStarting && (
-                <div className="absolute bottom-[100%] left-0 w-full h-32 pointer-events-none overflow-hidden mb-[-4px]">
-                  <div 
-                    className="absolute inset-0 flex items-end justify-around w-[300%] animate-buildings-scroll"
-                    style={{ animationDuration: '8s' }}
-                  >
-                    {[...Array(3)].map((_, i) => (
-                      <div key={i} className="flex items-end gap-20 px-10">
-                        <WatArunIcon className="w-12 h-16 text-white/10" />
-                        <LebuaIcon className="w-10 h-20 text-white/10" />
-                        <MahanakhonIcon className="w-8 h-24 text-white/10" />
-                      </div>
-                    ))}
-                  </div>
+              <div className="absolute bottom-[100%] left-0 w-full h-32 pointer-events-none overflow-hidden mb-[-4px]">
+                <div 
+                  className={`absolute inset-0 flex items-end justify-around w-[300%] ${isStarting ? 'animate-buildings-scroll' : ''}`}
+                  style={{ animationDuration: '8s' }}
+                >
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="flex items-end gap-20 px-10">
+                      <WatArunIcon className="w-12 h-16 text-white/10" />
+                      <LebuaIcon className="w-10 h-20 text-white/10" />
+                      <MahanakhonIcon className="w-8 h-24 text-white/10" />
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
 
               {/* TukTuk Animation - Positioned on the top edge of the button */}
               <div 
                 className="absolute transition-all duration-300 ease-in-out z-20"
                 style={{ 
-                  left: isStarting ? `${Math.max(8, Math.min(loadingProgress, 92))}%` : '1.5rem',
+                  left: isStarting ? `${Math.max(8, Math.min(loadingProgress, 92))}%` : '8%',
                   top: '0', 
                   opacity: 1,
-                  transform: 'translate(-50%, -92%)',
+                  transform: 'translate(-50%, -86%)',
                   pointerEvents: 'none'
                 }}
               >
@@ -536,7 +540,7 @@ const App: React.FC = () => {
               <button 
                 onClick={startGame}
                 disabled={isStarting}
-                className="group relative w-full py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-full overflow-hidden"
+                className="group relative w-full py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-2xl overflow-hidden"
               >
                 {/* Loading Percentage */}
                 {isStarting && (
@@ -581,7 +585,7 @@ const App: React.FC = () => {
                     onClick={() => handleSkipToEnding(ending.id)}
                     className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left"
                   >
-                    <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors">{ending.title}</span>
+                    <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors animate-arcade-neon">{ending.title}</span>
                   </button>
                 ))}
               </div>
@@ -602,27 +606,27 @@ const App: React.FC = () => {
           >
             BANGKOK QUEST
           </h1>
-          <p className="text-[10px] text-arcade-secondary mt-2 uppercase tracking-[0.3em] font-arcade">Your Journey Has Begun</p>
+          <p className="text-[10px] text-white mt-2 uppercase tracking-[0.3em] font-arcade">Your Journey Has Begun</p>
         </div>
           <div className="flex flex-wrap justify-center gap-8">
           {gameState.history.length > 1 && (
             <button 
               onClick={handleBack}
               disabled={gameState.isGenerating}
-              className="text-[10px] font-arcade text-zinc-500 hover:text-arcade-secondary transition-colors disabled:opacity-20 uppercase tracking-widest"
+              className="text-[10px] font-arcade text-arcade-secondary transition-colors disabled:opacity-20 uppercase tracking-widest"
             >
               [ back ]
             </button>
           )}
           <button 
             onClick={() => setIsSkipMenuOpen(true)}
-            className="text-[10px] font-arcade text-zinc-500 hover:text-arcade-choice transition-colors uppercase tracking-widest"
+            className="text-[10px] font-arcade text-arcade-choice transition-colors uppercase tracking-widest"
           >
             [ endings ]
           </button>
           <button 
             onClick={restartToLanding}
-            className="text-[10px] font-arcade text-zinc-500 hover:text-red-500 transition-colors uppercase tracking-widest"
+            className="text-[10px] font-arcade text-red-500 transition-colors uppercase tracking-widest"
           >
             [ restart ]
           </button>
@@ -705,7 +709,7 @@ const App: React.FC = () => {
                     <span className="text-arcade-accent text-[10px] font-arcade uppercase tracking-[0.4em] mb-4 block opacity-80">
                       {currentScene?.isEnding ? (galleryIndex === 0 ? 'LEVEL COMPLETE' : 'DRINK STATS') : ''}
                     </span>
-                    <h2 className="font-arcade text-2xl md:text-3xl text-white tracking-tight">
+                    <h2 className={`font-arcade text-2xl md:text-3xl text-white tracking-tight ${currentScene?.isEnding ? 'animate-arcade-neon' : ''}`}>
                       {currentScene?.title}
                     </h2>
                   </div>
@@ -781,12 +785,12 @@ const App: React.FC = () => {
             style={{ width: '1080px', height: '1920px', boxSizing: 'border-box' }}
             className="bg-[#080c14] p-20 flex flex-col items-center justify-between text-white font-arcade overflow-hidden"
           >
-            <div className="w-full flex flex-col items-center gap-10 flex-shrink-0">
+            <div className="w-full flex flex-col items-center gap-8 flex-shrink-0">
               <h1 className="text-6xl font-bold tracking-[0.2em] text-arcade-accent">BANGKOK QUEST</h1>
               <div className="w-full h-2 bg-arcade-accent/20 rounded-full" />
             </div>
 
-            <div className="w-full flex flex-col items-center gap-16 flex-grow justify-center">
+            <div className="w-full flex flex-col items-center gap-12 flex-grow justify-center">
               <div className="w-[920px] aspect-[16/9] rounded-[40px] overflow-hidden border-8 border-white/10 shadow-2xl flex-shrink-0 relative">
                 <img 
                   src={gameState.currentImageUrls[1] || DEFAULT_IMAGE} 
@@ -796,14 +800,14 @@ const App: React.FC = () => {
                 />
               </div>
               
-              <div className="text-center space-y-8 flex-shrink-0">
+              <div className="text-center space-y-6 flex-shrink-0">
                 <span className="text-3xl text-arcade-secondary uppercase tracking-[0.5em]">I ended up with</span>
                 <h2 className="text-8xl font-bold tracking-tight leading-tight">{currentScene.title}</h2>
               </div>
 
-              <div className="w-full flex flex-col items-center gap-10 bg-white/5 p-16 rounded-[60px] border border-white/10 flex-shrink-0">
+              <div className="w-full flex flex-col items-center gap-8 bg-white/5 p-16 rounded-[60px] border border-white/10 flex-shrink-0">
                 <div className="text-center max-w-[900px]">
-                  <p className="text-3xl text-zinc-500 uppercase tracking-[0.3em] mb-6">Stats</p>
+                  <p className="text-3xl text-zinc-500 uppercase tracking-[0.3em] mb-4">Stats</p>
                   <p className="text-4xl text-white leading-relaxed tracking-wide font-medium">
                     {currentScene.recipe}
                   </p>
@@ -811,7 +815,7 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full flex flex-col items-center gap-10 flex-shrink-0 pb-10">
+            <div className="w-full flex flex-col items-center gap-8 flex-shrink-0 pb-10">
               <div className="w-full h-2 bg-arcade-accent/20 rounded-full" />
               <div className="text-xl font-bold text-arcade-accent tracking-[0.4em] opacity-80">
                 Bangkok Quest at Lebua
@@ -840,9 +844,6 @@ const App: React.FC = () => {
                 className="w-full h-full object-contain" 
                 onContextMenu={(e) => e.stopPropagation()} // Allow native long-press
               />
-              <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <p className="text-[8px] text-white/60 text-center uppercase tracking-widest">Hold image to save to photos</p>
-              </div>
             </div>
             <div className="text-center space-y-2">
               <p className="text-white font-arcade text-[10px] uppercase tracking-widest animate-pulse">Ready to Share</p>
@@ -923,7 +924,7 @@ const App: React.FC = () => {
                   onClick={() => handleSkipToEnding(ending.id)}
                   className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left"
                 >
-                  <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors leading-tight">{ending.title}</span>
+                  <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors leading-tight animate-arcade-neon">{ending.title}</span>
                 </button>
               ))}
             </div>

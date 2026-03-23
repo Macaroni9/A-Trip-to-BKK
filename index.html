@@ -217,6 +217,14 @@
         0% { transform: translateX(0); }
         100% { transform: translateX(-33.33%); }
       }
+      @keyframes arcade-neon-pulse {
+        0%, 100% { 
+          text-shadow: 0 0 10px var(--arcade-choice), 0 0 20px var(--arcade-choice);
+        }
+        50% { 
+          text-shadow: 0 0 15px var(--arcade-secondary), 0 0 30px var(--arcade-secondary);
+        }
+      }
       @keyframes nyan-run {
         0% { transform: translateX(-100vw); }
         50% { transform: translateX(150vw); }
@@ -231,6 +239,9 @@
       }
       .animate-buildings-scroll {
         animation: buildings-scroll 8s linear infinite;
+      }
+      .animate-arcade-neon {
+        animation: arcade-neon-pulse 2s ease-in-out infinite;
       }
       .animate-nyan {
         animation: nyan-run 4s ease-in forwards;
