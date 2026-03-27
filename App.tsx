@@ -584,9 +584,41 @@ const App: React.FC = () => {
                   <button
                     key={ending.id}
                     onClick={() => handleSkipToEnding(ending.id)}
-                    className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left"
+                    className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left flex flex-col"
                   >
-                    <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors animate-arcade-neon">{ending.title}</span>
+                    <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors animate-arcade-neon mb-3">{ending.title}</span>
+                    
+                    {ending.recipe && (
+                      <div className="mb-4">
+                        <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest block mb-1">INGREDIENTS</span>
+                        <p className="text-[10px] text-zinc-500 line-clamp-2 leading-relaxed font-medium italic group-hover:text-zinc-400 transition-colors">
+                          {ending.recipe}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="mt-auto flex gap-6">
+                      {ending.abv !== undefined && (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest">ABV</span>
+                          <div className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`text-[10px] leading-none ${i < ending.abv! ? 'text-red-600' : 'text-zinc-900'}`}>❤</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {ending.sweetness !== undefined && (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest">SWEET</span>
+                          <div className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`text-[10px] leading-none ${i < ending.sweetness! ? 'text-red-600' : 'text-zinc-900'}`}>❤</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -943,3 +975,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
