@@ -107,7 +107,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
     } else if (sceneId === 'jodd_fairs_ending') {
       secondaryImage = 'https://i.ibb.co/C3C88TZJ/095880d2-41a5-439e-8a75-aa1333f73d0f-e74c4682-09ec-4541-a9a1-361630f1a930-raw.jpg';
     } else if (sceneId === '711_sweets_ending') {
-      secondaryImage = 'https://i.ibb.co/0pfhbPws/c7192fee-cfa1-460a-9b83-99a4afd7f180-3ad42d54-4d5d-411e-976f-0f1d189cdfec-raw.jpg';
+      secondaryImage = 'https://i.ibb.co/RGTkP0ym/3cc0ad3d-422e-4858-bbe5-071e13e40a97-0c3fdb1f-95ec-48df-b9ae-327c976d242a-raw.png';
     } else if (sceneId === 'sukhumvit_ending') {
       secondaryImage = 'https://i.ibb.co/YMCrKtn/5b26b084-555d-466d-9b64-b1211627b18b-fae605c4-1303-4d7d-a054-dbaeaa78e772-raw.jpg';
     } else if (sceneId === 'hotel_lobby_ending') {
