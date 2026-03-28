@@ -290,6 +290,7 @@ const App: React.FC = () => {
 
   const startGame = () => {
     if (isStarting) return;
+    setIsSkipMenuOpen(false);
     setIsStarting(true);
     
     // Start loading the first scene in the background immediately
@@ -469,202 +470,140 @@ const App: React.FC = () => {
     setIsNyanRunning(true);
     setTimeout(() => {
       setIsNyanRunning(false);
-      setIsSkipMenuOpen(true);
+      if (!isStarted) {
+        setIsSkipMenuOpen(true);
+      }
     }, 4000);
   };
 
-  if (!isStarted) {
-    return (
-      <div className="min-h-screen bg-[#080c14] text-zinc-100 flex flex-col items-center justify-center p-6 text-center">
-        <NyanCat isRunning={isNyanRunning} />
-        <div className="max-w-3xl w-full space-y-12 animate-fade-in">
-          <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-8 shadow-2xl">
-            <img 
-              src={DEFAULT_IMAGE} 
-              alt="Bangkok Skyline" 
-              className="w-full h-full object-cover brightness-[0.4]"
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+  return (
+    <div className="min-h-screen bg-[#080c14]">
+      {!isStarted ? (
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+          <NyanCat isRunning={isNyanRunning} />
+          <div className="max-w-3xl w-full space-y-12 animate-fade-in">
+            <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-8 shadow-2xl">
+              <img 
+                src={DEFAULT_IMAGE} 
+                alt="Bangkok Skyline" 
+                className="w-full h-full object-cover brightness-[0.4]"
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+                <h1 
+                  className="text-4xl md:text-6xl font-arcade font-bold tracking-tight text-white mb-4 glitch"
+                  data-text="BANGKOK QUEST"
+                >
+                  BANGKOK QUEST
+                </h1>
+              </div>
+            </div>
+
+            <div className="space-y-6 max-w-2xl mx-auto">
+              <p className="text-2xl md:text-3xl font-arcade text-arcade-accent leading-relaxed">
+                YOUR JOURNEY AWAITS
+              </p>
+              <p className="text-zinc-300 text-xl leading-relaxed font-medium">
+                Every decision you make amidst the neon temples or vibrant streets will define your narrative. 
+                At your journey's conclusion, a bespoke cocktail awaits—curated to match the spirit of your travels.
+              </p>
+            </div>
+
+            <div className="pt-8 flex flex-col items-center gap-6">
+              <div className="relative w-full max-w-[340px]">
+                {/* Scrolling Buildings - Positioned above the button */}
+                <div className="absolute bottom-[100%] left-0 w-full h-32 pointer-events-none overflow-hidden mb-[-4px]">
+                  <div 
+                    className={`absolute inset-0 flex items-end justify-around w-[300%] ${isStarting ? 'animate-buildings-scroll' : ''}`}
+                    style={{ animationDuration: '8s' }}
+                  >
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex items-end gap-20 px-10">
+                        <WatArunIcon className="w-12 h-16 text-white/10" />
+                        <LebuaIcon className="w-10 h-20 text-white/10" />
+                        <MahanakhonIcon className="w-8 h-24 text-white/10" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* TukTuk Animation - Positioned on the top edge of the button */}
+                <div 
+                  className="absolute transition-all duration-300 ease-in-out z-20"
+                  style={{ 
+                    left: isStarting ? `${Math.max(8, Math.min(loadingProgress, 92))}%` : '8%',
+                    top: '0', 
+                    opacity: 1,
+                    transform: 'translate(-50%, -86%)',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <div className={isStarting ? 'vibrate-active' : 'vibrate-idle'}>
+                    <TukTukIcon className="w-12 h-12 drop-shadow-[0_0_8px_rgba(26,58,138,0.5)]" />
+                  </div>
+                </div>
+
+                <button 
+                  onClick={startGame}
+                  disabled={isStarting}
+                  className="group relative w-full py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-2xl overflow-hidden"
+                >
+                  {/* Loading Percentage */}
+                  {isStarting && (
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-arcade text-black/40 animate-pulse">
+                      {loadingProgress}%
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-r from-arcade-choice/20 to-arcade-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {!isStarting && <span className="relative z-10">INITIATE QUEST</span>}
+                </button>
+              </div>
+              
+              <button 
+                onClick={handleBypassClick}
+                className="text-[10px] font-arcade text-zinc-500 hover:text-white transition-colors tracking-[0.2em]"
+              >
+                [ BYPASS TO ENDINGS ]
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="text-zinc-200 flex flex-col items-center p-4 md:p-10">
+          <header className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-center mb-12 animate-fade-in gap-6">
+            <div className="text-center md:text-left">
               <h1 
-                className="text-4xl md:text-6xl font-arcade font-bold tracking-tight text-white mb-4 glitch"
+                className="text-xl font-arcade font-bold text-arcade-accent uppercase tracking-wider glitch"
                 data-text="BANGKOK QUEST"
               >
                 BANGKOK QUEST
               </h1>
+              <p className="text-[10px] text-white mt-2 uppercase tracking-[0.3em] font-arcade">Your Journey Has Begun</p>
             </div>
-          </div>
-
-          <div className="space-y-6 max-w-2xl mx-auto">
-            <p className="text-2xl md:text-3xl font-arcade text-arcade-accent leading-relaxed">
-              YOUR JOURNEY AWAITS
-            </p>
-            <p className="text-zinc-300 text-xl leading-relaxed font-medium">
-              Every decision you make amidst the neon temples or vibrant streets will define your narrative. 
-              At your journey's conclusion, a bespoke cocktail awaits—curated to match the spirit of your travels.
-            </p>
-          </div>
-
-          <div className="pt-8 flex flex-col items-center gap-6">
-            <div className="relative w-full max-w-[340px]">
-              {/* Scrolling Buildings - Positioned above the button */}
-              <div className="absolute bottom-[100%] left-0 w-full h-32 pointer-events-none overflow-hidden mb-[-4px]">
-                <div 
-                  className={`absolute inset-0 flex items-end justify-around w-[300%] ${isStarting ? 'animate-buildings-scroll' : ''}`}
-                  style={{ animationDuration: '8s' }}
+              <div className="flex flex-wrap justify-center gap-8">
+              {gameState.history.length > 1 && (
+                <button 
+                  onClick={handleBack}
+                  disabled={gameState.isGenerating}
+                  className="text-[10px] font-arcade text-arcade-secondary transition-colors disabled:opacity-20 uppercase tracking-widest"
                 >
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="flex items-end gap-20 px-10">
-                      <WatArunIcon className="w-12 h-16 text-white/10" />
-                      <LebuaIcon className="w-10 h-20 text-white/10" />
-                      <MahanakhonIcon className="w-8 h-24 text-white/10" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* TukTuk Animation - Positioned on the top edge of the button */}
-              <div 
-                className="absolute transition-all duration-300 ease-in-out z-20"
-                style={{ 
-                  left: isStarting ? `${Math.max(8, Math.min(loadingProgress, 92))}%` : '8%',
-                  top: '0', 
-                  opacity: 1,
-                  transform: 'translate(-50%, -86%)',
-                  pointerEvents: 'none'
-                }}
-              >
-                <div className={isStarting ? 'vibrate-active' : 'vibrate-idle'}>
-                  <TukTukIcon className="w-12 h-12 drop-shadow-[0_0_8px_rgba(26,58,138,0.5)]" />
-                </div>
-              </div>
-
+                  [ back ]
+                </button>
+              )}
               <button 
-                onClick={startGame}
-                disabled={isStarting}
-                className="group relative w-full py-6 bg-white text-black font-arcade text-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] rounded-2xl overflow-hidden"
+                onClick={() => setIsSkipMenuOpen(true)}
+                className="text-[10px] font-arcade text-arcade-choice transition-colors uppercase tracking-widest"
               >
-                {/* Loading Percentage */}
-                {isStarting && (
-                  <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-arcade text-black/40 animate-pulse">
-                    {loadingProgress}%
-                  </div>
-                )}
-
-                <div className="absolute inset-0 bg-gradient-to-r from-arcade-choice/20 to-arcade-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                {!isStarting && <span className="relative z-10">INITIATE QUEST</span>}
+                [ endings ]
+              </button>
+              <button 
+                onClick={restartToLanding}
+                className="text-[10px] font-arcade text-red-500 transition-colors uppercase tracking-widest"
+              >
+                [ restart ]
               </button>
             </div>
-            
-            <button 
-              onClick={handleBypassClick}
-              className="text-[10px] font-arcade text-zinc-500 hover:text-white transition-colors tracking-[0.2em]"
-            >
-              [ BYPASS TO ENDINGS ]
-            </button>
-          </div>
-        </div>
-
-        {isSkipMenuOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
-            <div className="w-full max-w-2xl bg-black border-4 border-arcade-accent p-8 max-h-[90vh] overflow-y-auto shadow-[0_0_50px_var(--arcade-accent)]">
-              <div className="flex justify-between items-center mb-10">
-                <div>
-                  <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">CHEAT LIST</h2>
-                  <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-arcade">Direct access to all cocktail reveals</p>
-                </div>
-                <button 
-                  onClick={() => setIsSkipMenuOpen(false)}
-                  className="w-10 h-10 flex items-center justify-center border-2 border-arcade-accent text-arcade-accent hover:bg-arcade-accent hover:text-black transition-colors"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {endings.map((ending) => (
-                  <button
-                    key={ending.id}
-                    onClick={() => handleSkipToEnding(ending.id)}
-                    className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left flex flex-col"
-                  >
-                    <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors animate-arcade-neon mb-3">{ending.title}</span>
-                    
-                    {ending.recipe && (
-                      <div className="mb-4">
-                        <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest block mb-1">INGREDIENTS</span>
-                        <p className="text-[10px] text-zinc-500 line-clamp-2 leading-relaxed font-medium italic group-hover:text-zinc-400 transition-colors">
-                          {ending.recipe}
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="mt-auto flex gap-6">
-                      {ending.abv !== undefined && (
-                        <div className="flex flex-col gap-1">
-                          <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest">ABV</span>
-                          <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                              <span key={i} className={`text-[10px] leading-none ${i < ending.abv! ? 'text-red-600' : 'text-zinc-900'}`}>❤</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      {ending.sweetness !== undefined && (
-                        <div className="flex flex-col gap-1">
-                          <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest">SWEET</span>
-                          <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                              <span key={i} className={`text-[10px] leading-none ${i < ending.sweetness! ? 'text-red-600' : 'text-zinc-900'}`}>❤</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#080c14] text-zinc-200 flex flex-col items-center p-4 md:p-10">
-      <header className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-center mb-12 animate-fade-in gap-6">
-        <div className="text-center md:text-left">
-          <h1 
-            className="text-xl font-arcade font-bold text-arcade-accent uppercase tracking-wider glitch"
-            data-text="BANGKOK QUEST"
-          >
-            BANGKOK QUEST
-          </h1>
-          <p className="text-[10px] text-white mt-2 uppercase tracking-[0.3em] font-arcade">Your Journey Has Begun</p>
-        </div>
-          <div className="flex flex-wrap justify-center gap-8">
-          {gameState.history.length > 1 && (
-            <button 
-              onClick={handleBack}
-              disabled={gameState.isGenerating}
-              className="text-[10px] font-arcade text-arcade-secondary transition-colors disabled:opacity-20 uppercase tracking-widest"
-            >
-              [ back ]
-            </button>
-          )}
-          <button 
-            onClick={() => setIsSkipMenuOpen(true)}
-            className="text-[10px] font-arcade text-arcade-choice transition-colors uppercase tracking-widest"
-          >
-            [ endings ]
-          </button>
-          <button 
-            onClick={restartToLanding}
-            className="text-[10px] font-arcade text-red-500 transition-colors uppercase tracking-widest"
-          >
-            [ restart ]
-          </button>
-        </div>
-      </header>
+          </header>
 
       <main className="w-full max-w-5xl flex flex-col gap-10">
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-950 shadow-2xl group rounded-2xl">
@@ -939,40 +878,86 @@ const App: React.FC = () => {
           </span>
         </div>
       </footer>
-
-      {isSkipMenuOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-2xl bg-black border-4 border-arcade-accent p-8 max-h-[90vh] overflow-y-auto shadow-[0_0_50px_var(--arcade-accent)]">
-            <div className="flex justify-between items-center mb-10">
-              <div>
-                <h2 className="text-2xl font-arcade font-bold text-arcade-accent tracking-tight">CHEAT LIST</h2>
-                <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-arcade">Direct access to all cocktail reveals</p>
-              </div>
-              <button 
-                onClick={() => setIsSkipMenuOpen(false)}
-                className="w-10 h-10 flex items-center justify-center border-2 border-arcade-accent text-arcade-accent hover:bg-arcade-accent hover:text-black transition-colors"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {endings.map((ending) => (
-                <button
-                  key={ending.id}
-                  onClick={() => handleSkipToEnding(ending.id)}
-                  className="group p-6 border-2 border-zinc-800 bg-black hover:border-arcade-secondary hover:shadow-[0_0_15px_var(--arcade-secondary)] transition-all text-left"
-                >
-                  <span className="block text-zinc-200 group-hover:text-arcade-secondary font-arcade text-xs transition-colors leading-tight animate-arcade-neon">{ending.title}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
-  );
+  )}
+
+  {isSkipMenuOpen && (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-fade-in">
+      <div className="w-full max-w-3xl bg-[#080c14] border-2 border-white/10 p-6 md:p-10 max-h-[90vh] overflow-y-auto shadow-2xl rounded-3xl relative">
+        <div className="flex justify-between items-start mb-12">
+          <div>
+            <h2 className="text-3xl font-arcade font-bold text-white tracking-tight glitch" data-text="CHEAT LIST">CHEAT LIST</h2>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] mt-2 font-arcade">Direct access to all cocktail reveals</p>
+          </div>
+          <button 
+            onClick={() => setIsSkipMenuOpen(false)}
+            className="p-3 text-zinc-500 hover:text-white transition-colors"
+          >
+            <X className="w-8 h-8" />
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {endings.map((ending) => (
+            <button
+              key={ending.id}
+              onClick={() => handleSkipToEnding(ending.id)}
+              className="group relative p-8 border border-white/10 bg-white/[0.02] transition-all text-left flex flex-col rounded-2xl overflow-hidden min-h-[200px]"
+            >
+              <span className="block text-zinc-400 font-arcade text-sm transition-colors mb-4 pr-32 uppercase tracking-wider animate-arcade-neon">{ending.title}</span>
+              
+              {ending.recipe && (
+                <div className="mb-6 pr-32">
+                  <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest block mb-1.5">INGREDIENTS</span>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed font-medium italic transition-colors">
+                    {ending.recipe}
+                  </p>
+                </div>
+              )}
+
+              <div className="mt-auto flex gap-8 pr-32">
+                {ending.abv !== undefined && (
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest">ABV</span>
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`text-[12px] leading-none ${i < ending.abv! ? 'text-red-600' : 'text-zinc-900'}`}>❤</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {ending.sweetness !== undefined && (
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[8px] font-arcade text-zinc-600 uppercase tracking-widest">SWEETNESS</span>
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`text-[12px] leading-none ${i < ending.sweetness! ? 'text-red-600' : 'text-zinc-900'}`}>❤</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Animated Thumbnail */}
+              {ending.thumbnailUrl && (
+                <div className="absolute bottom-24 right-4 w-24 h-24 pointer-events-none flex items-center justify-center">
+                  <img 
+                    src={ending.thumbnailUrl} 
+                    alt={ending.title}
+                    className="w-20 h-20 object-contain animate-collectible"
+                    style={{ mixBlendMode: 'screen' }}
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+);
 };
 
 export default App;
-

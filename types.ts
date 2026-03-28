@@ -16,6 +16,7 @@ export interface Scene {
   recipe?: string;
   abv?: number;
   sweetness?: number;
+  thumbnailUrl?: string;
 }
 
 export interface GameState {
