@@ -86,7 +86,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 2,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/jks966XD/6632-F798-CE8-C-4841-BD4-C-4629466-DA97-E.jpg'
+    thumbnailUrl: 'https://i.ibb.co/jks966XD/6632-F798-CE8-C-4841-BD4-C-4629466-DA97-E.jpg',
+    thumbnailOffset: 'bottom-16'
   },
   'jodd_fairs_ending': {
     id: 'jodd_fairs_ending',
@@ -97,7 +98,9 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 2,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/jvPS5Hf3/27-D19-FB3-72-EE-44-A5-BE87-16-DC4-F97-A96-F.jpg'
+    thumbnailUrl: 'https://i.ibb.co/jvPS5Hf3/27-D19-FB3-72-EE-44-A5-BE87-16-DC4-F97-A96-F.jpg',
+    thumbnailOffset: 'bottom-12',
+    thumbnailScale: 'w-24 h-24'
   },
   '711_sweets_ending': {
     id: '711_sweets_ending',
@@ -108,7 +111,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 4,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/JwWmMRcn/839-E867-E-BBC5-476-D-901-A-12-BC1251-ECBF.jpg'
+    thumbnailUrl: 'https://i.ibb.co/JwWmMRcn/839-E867-E-BBC5-476-D-901-A-12-BC1251-ECBF.jpg',
+    thumbnailOffset: 'bottom-16'
   },
   'sukhumvit_ending': {
     id: 'sukhumvit_ending',
@@ -119,7 +123,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 3,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/BVHY21Yq/FDEC9190-E039-4-CA5-8-C27-F29-D764-C3-E28.jpg'
+    thumbnailUrl: 'https://i.ibb.co/BVHY21Yq/FDEC9190-E039-4-CA5-8-C27-F29-D764-C3-E28.jpg',
+    thumbnailOffset: 'bottom-16'
   },
   'chao_phraya_ending': {
     id: 'chao_phraya_ending',
@@ -130,7 +135,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 2,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/ymL8pyGw/BBF1749-F-D51-A-41-AC-893-F-4-F4-B230-F0-DF3.jpg'
+    thumbnailUrl: 'https://i.ibb.co/ymL8pyGw/BBF1749-F-D51-A-41-AC-893-F-4-F4-B230-F0-DF3.jpg',
+    thumbnailOffset: 'bottom-12'
   },
   'hotel_lobby_ending': {
     id: 'hotel_lobby_ending',
@@ -141,7 +147,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 1,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/Q7qpdcjn/C9-ABC77-F-3-A3-A-4470-B432-7-A25365-AD5-A2.jpg'
+    thumbnailUrl: 'https://i.ibb.co/Q7qpdcjn/C9-ABC77-F-3-A3-A-4470-B432-7-A25365-AD5-A2.jpg',
+    thumbnailOffset: 'bottom-12'
   },
   'bts_skyline_ending': {
     id: 'bts_skyline_ending',
@@ -152,7 +159,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 2,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/N2k53tLP/65873-CC3-D327-483-E-9-F6-C-A8-CB3-FC31-D1-A.jpg'
+    thumbnailUrl: 'https://i.ibb.co/N2k53tLP/65873-CC3-D327-483-E-9-F6-C-A8-CB3-FC31-D1-A.jpg',
+    thumbnailOffset: 'bottom-12'
   },
   'chatuchak_ending': {
     id: 'chatuchak_ending',
@@ -163,7 +171,9 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 2,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/mFh8K89x/626-EE1-DA-6-ABF-4-D44-AECF-E04-D2-D31-DABF.jpg'
+    thumbnailUrl: 'https://i.ibb.co/mFh8K89x/626-EE1-DA-6-ABF-4-D44-AECF-E04-D2-D31-DABF.jpg',
+    thumbnailOffset: 'bottom-12',
+    thumbnailScale: 'w-22 h-22'
   },
   'massage_ending': {
     id: 'massage_ending',
@@ -174,6 +184,8 @@ export const STORY_DATA: Record<string, Scene> = {
     sweetness: 4,
     choices: [],
     isEnding: true,
-    thumbnailUrl: 'https://i.ibb.co/nqMPhqkZ/A66-DB0-DA-51-C1-4-E30-9-D1-E-F721471-F6-C70.png'
+    thumbnailUrl: 'https://i.ibb.co/nqMPhqkZ/A66-DB0-DA-51-C1-4-E30-9-D1-E-F721471-F6-C70.png',
+    thumbnailOffset: 'bottom-12',
+    thumbnailScale: 'w-22 h-22'
   }
 };

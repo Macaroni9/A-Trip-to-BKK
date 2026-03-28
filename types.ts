@@ -17,6 +17,8 @@ export interface Scene {
   abv?: number;
   sweetness?: number;
   thumbnailUrl?: string;
+  thumbnailOffset?: string;
+  thumbnailScale?: string;
 }
 
 export interface GameState {

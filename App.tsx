@@ -940,11 +940,11 @@ const App: React.FC = () => {
 
               {/* Animated Thumbnail */}
               {ending.thumbnailUrl && (
-                <div className="absolute bottom-24 right-4 w-24 h-24 pointer-events-none flex items-center justify-center">
+                <div className={`absolute ${ending.thumbnailOffset || 'bottom-24'} right-4 w-24 h-24 pointer-events-none flex items-center justify-center`}>
                   <img 
                     src={ending.thumbnailUrl} 
                     alt={ending.title}
-                    className="w-20 h-20 object-contain animate-collectible"
+                    className={`${ending.thumbnailScale || 'w-20 h-20'} object-contain animate-collectible`}
                     style={{ mixBlendMode: 'screen' }}
                     referrerPolicy="no-referrer"
                   />
