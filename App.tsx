@@ -5,7 +5,7 @@ import { StoryAnimation } from './components/StoryAnimation';
 import { GameState } from './types';
 import { generateSceneContent, generateSceneImage } from './services/geminiService';
 import { ChoiceButton } from './components/ChoiceButton';
-import { Instagram, Share2, Download, CheckCircle2, X } from 'lucide-react';
+import { Instagram, Share2, Download, CheckCircle2, X, Sun, Sunset, Moon } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const LOADING_MESSAGES = [
@@ -196,6 +196,20 @@ const App: React.FC = () => {
   // Real-time temperature state
   const [currentTemp, setCurrentTemp] = useState('32');
   const [tempSource, setTempSource] = useState<{ uri: string; title: string } | null>(null);
+
+  const bangkokTime = useMemo(() => {
+    const now = new Date();
+    // Bangkok is UTC+7
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const bkk = new Date(utc + (3600000 * 7));
+    return bkk.getHours();
+  }, []);
+
+  const timeIcon = useMemo(() => {
+    if (bangkokTime >= 6 && bangkokTime < 17) return <Sun className="w-3 h-3 text-yellow-500" />;
+    if (bangkokTime >= 17 && bangkokTime < 19) return <Sunset className="w-3 h-3 text-orange-500" />;
+    return <Moon className="w-3 h-3 text-blue-300" />;
+  }, [bangkokTime]);
 
   useEffect(() => {
     const fetchRealTimeTemp = async () => {
@@ -412,7 +426,7 @@ const App: React.FC = () => {
           await navigator.share({
             files: [file],
             title: 'Bangkok Quest',
-            text: 'My Bangkok Spirit Drink Result',
+            text: 'My Bangkok Spirit Drink Is...',
           });
           return;
         }
@@ -645,6 +659,23 @@ const App: React.FC = () => {
           )}
         </div>
 
+        {/* Temperature and Mood Tabs Below Image (Only during story) */}
+        {!currentScene?.isEnding && (
+          <div className="flex justify-between items-center px-4 -mt-6 animate-fade-in">
+            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full">
+              <span className="text-[8px] font-arcade text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                TEMP: {currentTemp}C {timeIcon}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full">
+              <div className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${gameState.isGenerating ? 'bg-yellow-500 shadow-yellow-500/50 animate-pulse' : 'bg-green-500 shadow-green-500/50'}`} />
+              <span className="text-[8px] font-arcade text-zinc-400 uppercase tracking-widest">
+                MOOD: {gameState.isGenerating ? 'SHIFTING' : 'STABLE'}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Swipe Instructions and Indicators Below Image */}
         {gameState.currentImageUrls && gameState.currentImageUrls.length > 1 && !gameState.isGenerating && (
           <div className="flex flex-col items-center gap-6 -mt-6 animate-fade-in">
@@ -845,8 +876,11 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <footer className="w-full max-w-5xl mt-20 pb-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-arcade uppercase text-zinc-600 border-t-2 border-zinc-800 pt-10">
-        <div className="flex flex-wrap justify-center gap-8 order-2 md:order-1">
+      <footer className="w-full max-w-5xl mt-20 pb-10 flex flex-col items-center gap-8 text-[10px] font-arcade uppercase text-zinc-600 border-t-2 border-zinc-800 pt-10">
+        <div className="text-center opacity-40 tracking-[0.2em]">
+          you have reached the end of the page, but not the end of the night
+        </div>
+        <div className="flex flex-wrap justify-center gap-8">
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-arcade-accent/40" />
             LAT: 13.7214
@@ -854,27 +888,6 @@ const App: React.FC = () => {
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-arcade-accent/40" />
             LON: 100.5169
-          </span>
-        </div>
-        <div className="flex flex-wrap justify-center gap-8 order-1 md:order-2">
-          <span className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-arcade-accent/40" />
-            TEMP: {currentTemp}C
-            {tempSource && (
-              <a 
-                href={tempSource.uri} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                title={`Sourced from: ${tempSource.title}`}
-                className="ml-1 opacity-30 hover:opacity-100 transition-opacity"
-              >
-                
-              </a>
-            )}
-          </span>
-          <span className="flex items-center gap-2">
-            <span className={`w-2 h-2 transition-colors duration-500 ${gameState.isGenerating ? 'bg-arcade-secondary animate-pulse' : 'bg-arcade-accent/50'}`} />
-            MOOD: {gameState.isGenerating ? 'SHIFTING' : 'STABLE'}
           </span>
         </div>
       </footer>
