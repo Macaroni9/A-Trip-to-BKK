@@ -93,7 +93,7 @@ export const STORY_DATA: Record<string, Scene> = {
     id: 'jodd_fairs_ending',
     title: 'JODD FAIRS GLUTTONY',
     corePrompt: 'Surrounded by the glow of the night market. You sweat, you smile, and you pretend you can handle Thai spicy. Your soul feels seasoned.',
-    recipe: 'Reposado Tequila, Tropical Gin, Oloroso, White Soy, Sake, Kombu, Mezcal, Sushi Cracker.',
+    recipe: 'Reposado Tequila, Tropical Gin, Fino Sherry, White Soy, Sake, Kombu, Mezcal, Sushi Cracker.',
     abv: 4,
     sweetness: 2,
     choices: [],
