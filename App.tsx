@@ -620,12 +620,12 @@ const App: React.FC = () => {
           </header>
 
       <main className="w-full max-w-5xl flex flex-col gap-10">
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-950 shadow-2xl group rounded-2xl">
+        <div className="w-full">
           {gameState.currentImageUrls && gameState.currentImageUrls.length > 0 && !gameState.isGenerating ? (
-            <div className="w-full h-full relative">
+            <div className="w-full flex flex-col gap-6">
               <div 
                 ref={galleryRef}
-                className="w-full h-full flex transition-transform duration-700 ease-in-out scrollbar-hide snap-x snap-mandatory overflow-x-auto"
+                className="w-full flex transition-transform duration-700 ease-in-out scrollbar-hide snap-x snap-mandatory overflow-x-auto"
                 onScroll={(e) => {
                   const scrollPos = e.currentTarget.scrollLeft;
                   const width = e.currentTarget.offsetWidth;
@@ -635,20 +635,51 @@ const App: React.FC = () => {
                 }}
               >
                 {gameState.currentImageUrls.map((url, idx) => (
-                  <div key={idx} className="w-full h-full flex-shrink-0 snap-start relative">
-                    <img 
-                      src={url} 
-                      alt={`Scene Image ${idx + 1}`} 
-                      className="w-full h-full object-cover animate-fade-in"
-                      crossOrigin="anonymous"
-                      onError={(e) => { e.currentTarget.src = DEFAULT_IMAGE; }}
-                    />
+                  <div key={idx} className="w-full flex-shrink-0 snap-start flex flex-col gap-6">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-950 shadow-2xl rounded-2xl">
+                      <img 
+                        src={url} 
+                        alt={`Scene Image ${idx + 1}`} 
+                        className="w-full h-full object-cover animate-fade-in"
+                        crossOrigin="anonymous"
+                        onError={(e) => { e.currentTarget.src = DEFAULT_IMAGE; }}
+                      />
+                    </div>
+                    
+                    {/* Swipe Instructions (Below Image, inside scrollable area) */}
+                    {currentScene?.isEnding && gameState.currentImageUrls.length > 1 && (
+                      <div className="flex justify-center h-4">
+                        <div className="flex items-center gap-2 text-[8px] font-arcade uppercase tracking-widest">
+                          {idx === 0 ? (
+                            <div className="shimmer-text animate-shimmer-left">
+                              <span className="animate-pulse">←</span> Swipe left for story
+                            </div>
+                          ) : (
+                            <div className="shimmer-text animate-shimmer-right">
+                              Swipe right to drink <span className="animate-pulse">→</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
+
+              {/* Dots - Fixed below, outside scrollable area */}
+              {gameState.currentImageUrls && gameState.currentImageUrls.length > 1 && (
+                <div className="flex justify-center gap-1.5 -mt-2">
+                  {gameState.currentImageUrls.map((_, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`h-1 transition-all duration-300 ${galleryIndex === idx ? 'w-4 bg-white' : 'w-1 bg-white/20'}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center p-8">
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-950 shadow-2xl rounded-2xl flex items-center justify-center p-8">
               <div className="flex flex-col items-center gap-6 w-full max-w-[80%]">
                 <div className="w-12 h-12 border-t-4 border-white rounded-full animate-spin opacity-60" />
                 <p className="text-[7px] md:text-[9px] font-arcade tracking-[0.2em] text-white uppercase text-center leading-loose">
@@ -661,7 +692,7 @@ const App: React.FC = () => {
 
         {/* Temperature and Mood Tabs Below Image (Only during story) */}
         {!currentScene?.isEnding && (
-          <div className="flex justify-between items-center px-4 -mt-6 animate-fade-in">
+          <div className="flex justify-between items-center px-4 mt-4 animate-fade-in">
             <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full">
               <span className="text-[8px] font-arcade text-zinc-400 uppercase tracking-widest flex items-center gap-2">
                 TEMP: {currentTemp}C {timeIcon}
@@ -672,34 +703,6 @@ const App: React.FC = () => {
               <span className="text-[8px] font-arcade text-zinc-400 uppercase tracking-widest">
                 MOOD: {gameState.isGenerating ? 'SHIFTING' : 'STABLE'}
               </span>
-            </div>
-          </div>
-        )}
-
-        {/* Swipe Instructions Below Image */}
-        {gameState.currentImageUrls && gameState.currentImageUrls.length > 1 && !gameState.isGenerating && (
-          <div className="flex flex-col items-center gap-4 -mt-6 animate-fade-in">
-            <div className="flex justify-center">
-              <div className="flex items-center gap-2 text-[8px] font-arcade uppercase tracking-widest bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                {galleryIndex === 0 ? (
-                  <div className="shimmer-text animate-shimmer-left">
-                    <span className="animate-pulse">←</span> Swipe left for story
-                  </div>
-                ) : (
-                  <div className="shimmer-text animate-shimmer-right">
-                    Swipe right to drink <span className="animate-pulse">→</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Dots - kept small and subtle */}
-            <div className="flex gap-1.5">
-              {gameState.currentImageUrls.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  className={`h-1 transition-all duration-300 ${galleryIndex === idx ? 'w-4 bg-white' : 'w-1 bg-white/20'}`}
-                />
-              ))}
             </div>
           </div>
         )}
