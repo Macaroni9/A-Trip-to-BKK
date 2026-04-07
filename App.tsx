@@ -354,8 +354,8 @@ const App: React.FC = () => {
   const handleSkipToEnding = (endingId: string) => {
     setIsSkipMenuOpen(false);
     setIsStarted(true);
-    // Jump to the ending and default to the drink image (index 1)
-    loadScene(endingId, false, 1);
+    // Jump to the ending and default to the drink image (index 0)
+    loadScene(endingId, false, 0);
   };
 
   const handleShare = async () => {
@@ -474,7 +474,7 @@ const App: React.FC = () => {
   const currentScene = STORY_DATA[gameState.currentSceneId];
 
   const displayNarration = useMemo(() => {
-    if (currentScene?.isEnding && galleryIndex === 1 && currentScene.recipe) {
+    if (currentScene?.isEnding && galleryIndex === 0 && currentScene.recipe) {
       return currentScene.recipe;
     }
     return gameState.currentText;
@@ -676,24 +676,30 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {/* Swipe Instructions and Indicators Below Image */}
+        {/* Swipe Instructions Below Image */}
         {gameState.currentImageUrls && gameState.currentImageUrls.length > 1 && !gameState.isGenerating && (
-          <div className="flex flex-col items-center gap-6 -mt-6 animate-fade-in">
-            <div className="flex gap-2">
+          <div className="flex flex-col items-center gap-4 -mt-6 animate-fade-in">
+            <div className="flex justify-center">
+              <div className="flex items-center gap-2 text-[8px] font-arcade uppercase tracking-widest bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                {galleryIndex === 0 ? (
+                  <div className="shimmer-text animate-shimmer-left">
+                    <span className="animate-pulse">←</span> Swipe left for story
+                  </div>
+                ) : (
+                  <div className="shimmer-text animate-shimmer-right">
+                    Swipe right to drink <span className="animate-pulse">→</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Dots - kept small and subtle */}
+            <div className="flex gap-1.5">
               {gameState.currentImageUrls.map((_, idx) => (
                 <div 
                   key={idx} 
-                  className={`h-1.5 transition-all duration-300 ${galleryIndex === idx ? 'w-8 bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'w-2 bg-white/20'}`}
+                  className={`h-1 transition-all duration-300 ${galleryIndex === idx ? 'w-4 bg-white' : 'w-1 bg-white/20'}`}
                 />
               ))}
-            </div>
-            <div className="flex justify-center gap-10">
-              <div className={`flex items-center gap-2 text-[8px] font-arcade uppercase tracking-widest transition-opacity duration-300 ${galleryIndex === 0 ? 'text-white opacity-100' : 'text-zinc-600 opacity-40'}`}>
-                <span className="animate-pulse">←</span> Swipe for Spirit
-              </div>
-              <div className={`flex items-center gap-2 text-[8px] font-arcade uppercase tracking-widest transition-opacity duration-300 ${galleryIndex === 1 ? 'text-white opacity-100' : 'text-zinc-600 opacity-40'}`}>
-                Swipe for Story <span className="animate-pulse">→</span>
-              </div>
             </div>
           </div>
         )}
@@ -710,7 +716,7 @@ const App: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
                   <div>
                     <span className="text-arcade-accent text-[10px] font-arcade uppercase tracking-[0.4em] mb-4 block opacity-80">
-                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'LEVEL COMPLETE' : 'DRINK STATS') : ''}
+                      {currentScene?.isEnding ? (galleryIndex === 0 ? 'DRINK STATS' : 'LEVEL COMPLETE') : ''}
                     </span>
                     <div className="flex items-center gap-4">
                       <h2 className={`font-arcade text-2xl md:text-3xl text-white tracking-tight ${currentScene?.isEnding ? 'animate-arcade-neon' : ''}`}>
@@ -720,7 +726,7 @@ const App: React.FC = () => {
                     </div>
                   </div>
                   
-                  {currentScene?.isEnding && galleryIndex === 1 && (currentScene.abv !== undefined || currentScene.sweetness !== undefined) && (
+                  {currentScene?.isEnding && galleryIndex === 0 && (currentScene.abv !== undefined || currentScene.sweetness !== undefined) && (
                     <div className="flex gap-6 animate-fade-in">
                       {currentScene.abv !== undefined && <Hearts label="ABV" rating={currentScene.abv} />}
                       {currentScene.sweetness !== undefined && <Hearts label="Sweetness" rating={currentScene.sweetness} />}
@@ -748,7 +754,7 @@ const App: React.FC = () => {
           
           {currentScene?.isEnding && !gameState.isGenerating && (
             <div className="col-span-full flex flex-col items-center mt-12 py-20 border-t border-white/5 bg-white/[0.02] rounded-3xl backdrop-blur-sm">
-              {galleryIndex === 1 && (
+              {galleryIndex === 0 && (
                 <div className="mb-10 flex flex-col items-center animate-fade-in">
                   <button 
                     onClick={handleShare}
@@ -799,7 +805,7 @@ const App: React.FC = () => {
             <div className="w-full flex flex-col items-center gap-12 flex-grow justify-center">
               <div className="w-[920px] aspect-[16/9] rounded-[40px] overflow-hidden border-8 border-white/10 shadow-2xl flex-shrink-0 relative">
                 <img 
-                  src={gameState.currentImageUrls[1] || DEFAULT_IMAGE} 
+                  src={gameState.currentImageUrls[0] || DEFAULT_IMAGE} 
                   alt="Spirit Drink" 
                   className="absolute inset-0 w-full h-full object-cover"
                   crossOrigin="anonymous"

@@ -300,6 +300,27 @@
       .animate-nyan-trail {
         animation: nyan-trail-wave 0.4s step-end infinite;
       }
+      @keyframes shimmer-left {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      @keyframes shimmer-right {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+      .shimmer-text {
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0) 100%);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+      }
+      .animate-shimmer-left {
+        animation: shimmer-left 3s infinite linear;
+      }
+      .animate-shimmer-right {
+        animation: shimmer-right 3s infinite linear;
+      }
     </style>
   <script type="importmap">
 {

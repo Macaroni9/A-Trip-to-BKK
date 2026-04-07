@@ -120,7 +120,7 @@ export const generateSceneImage = async (sceneId: string): Promise<string | stri
       secondaryImage = 'https://i.ibb.co/qLJ070Nr/94d432f7-e73c-437c-a661-eb4ace05c36b-0aa30bf0-d03b-4b54-976a-a00f06b6d632-raw.jpg';
     }
 
-    return [primaryImage, secondaryImage];
+    return [secondaryImage, primaryImage];
   }
 
   return primaryImage;
