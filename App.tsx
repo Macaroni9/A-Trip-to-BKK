@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { jsPDF } from 'jspdf';
 import { STORY_DATA } from './constants/story';
 import { StoryAnimation } from './components/StoryAnimation';
 import { GameState } from './types';
@@ -190,8 +191,10 @@ const App: React.FC = () => {
   const [isSharing, setIsSharing] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
   const [shareImage, setShareImage] = useState<string | null>(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const galleryRef = useRef<HTMLDivElement>(null);
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const pdfSourceRef = useRef<HTMLDivElement>(null);
   
   // Real-time temperature state
   const [currentTemp, setCurrentTemp] = useState('32');
@@ -454,6 +457,183 @@ const App: React.FC = () => {
           </body>
         `);
       }
+    }
+  };
+
+  const generateCocktailMenuPDF = async () => {
+    if (isGeneratingPDF) return;
+    setIsGeneratingPDF(true);
+    
+    // Mapping of ending IDs to their main "drink" images as shown in the game
+    const DRINK_IMAGE_MAPPING: Record<string, string> = {
+      'khaosan_ending': 'https://i.ibb.co/h1njp48Z/ccf9edb5-38d5-4bd2-92ed-3b411b920313-4b85d0dd-9179-4307-8b3f-bebff43cfde7-raw.jpg',
+      'chao_phraya_ending': 'https://i.ibb.co/nNqM76mB/b2801cbb-bc8a-4e23-ad36-7c4223292ced-5e48b495-4241-43b7-b5a2-cf1f36a22d4a-raw.jpg',
+      'jodd_fairs_ending': 'https://i.ibb.co/C3C88TZJ/095880d2-41a5-439e-8a75-aa1333f73d0f-e74c4682-09ec-4541-a9a1-361630f1a930-raw.jpg',
+      '711_sweets_ending': 'https://i.ibb.co/RGTkP0ym/3cc0ad3d-422e-4858-bbe5-071e13e40a97-0c3fdb1f-95ec-48df-b9ae-327c976d242a-raw.png',
+      'sukhumvit_ending': 'https://i.ibb.co/YMCrKtn/5b26b084-555d-466d-9b64-b1211627b18b-fae605c4-1303-4d7d-a054-dbaeaa78e772-raw.jpg',
+      'hotel_lobby_ending': 'https://i.ibb.co/KjBQHCzW/8062aedc-ad30-4cef-9ab2-a01af5cab29a-7d013cfb-bf2f-44f3-9dba-79333ff35893-raw.jpg',
+      'bts_skyline_ending': 'https://i.ibb.co/JFrT3x6D/fec4ed71-14db-4f6e-8b96-2aeb35aaf532-5da4ca9a-7a14-4216-8e30-cc7ad1f6087f-raw.jpg',
+      'chatuchak_ending': 'https://i.ibb.co/CKKSH62T/2a7fbf60-563b-41dd-bbb1-7c0e0930975e-62bc1e0e-379d-4945-a917-e1dbb5c2bbfa-raw.jpg',
+      'massage_ending': 'https://i.ibb.co/qLJ070Nr/94d432f7-e73c-437c-a661-eb4ace05c36b-0aa30bf0-d03b-4b54-976a-a00f06b6d632-raw.jpg'
+    };
+
+    try {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      // --- 1. COVER PAGE ---
+      const coverContainer = document.createElement('div');
+      coverContainer.style.position = 'fixed';
+      coverContainer.style.left = '-9999px';
+      coverContainer.style.top = '-9999px';
+      coverContainer.style.width = '1200px';
+      coverContainer.style.height = '1600px';
+      coverContainer.style.backgroundColor = '#080c14';
+      coverContainer.style.display = 'flex';
+      coverContainer.style.flexDirection = 'column';
+      coverContainer.style.alignItems = 'center';
+      coverContainer.style.justifyContent = 'center';
+      coverContainer.style.color = 'white';
+      coverContainer.style.fontFamily = "'Press Start 2P', cursive";
+      coverContainer.style.gap = '100px';
+      coverContainer.style.textAlign = 'center';
+      coverContainer.style.padding = '80px';
+
+      coverContainer.innerHTML = `
+        <h1 style="font-size: 80px; letter-spacing: 20px; line-height: 1.4; color: #ffffff; text-transform: uppercase; margin: 0;">BANGKOK QUEST</h1>
+        
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 60px; max-width: 900px;">
+          <div style="width: 440px; height: 440px; border-radius: 40px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <img src="https://i.ibb.co/KpPc41Gh/IMG-9014.jpg" style="width: 100%; height: 100%; object-fit: contain;" />
+          </div>
+          
+          <p style="font-size: 16px; line-height: 2.2; color: #ccc; font-family: 'Press Start 2P', cursive; letter-spacing: 4px; text-transform: uppercase; font-weight: normal; margin: 0;">
+            Every decision you make amidst the neon temples or vibrant streets will define your narrative. At your journey's conclusion, a bespoke cocktail awaits—curated to match the spirit of your travels.
+          </p>
+        </div>
+      `;
+      
+      document.body.appendChild(coverContainer);
+      
+      // Wait for QR image
+      const qrImg = coverContainer.querySelector('img');
+      if (qrImg) {
+        await new Promise((resolve) => {
+          if (qrImg.complete) resolve(true);
+          qrImg.onload = () => resolve(true);
+          qrImg.onerror = () => resolve(true);
+          setTimeout(() => resolve(true), 1500);
+        });
+      }
+
+      const coverCanvas = await html2canvas(coverContainer, {
+        scale: 2,
+        backgroundColor: '#080c14',
+        useCORS: true,
+        logging: false
+      });
+      pdf.addImage(coverCanvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
+      document.body.removeChild(coverContainer);
+
+      // --- 2. COCKTAIL PAGES ---
+      for (let i = 0; i < endings.length; i++) {
+        const ending = endings[i];
+        const drinkImageUrl = DRINK_IMAGE_MAPPING[ending.id] || ending.thumbnailUrl;
+        
+        // Add new page for each cocktail
+        pdf.addPage();
+        
+        const tempContainer = document.createElement('div');
+        tempContainer.style.position = 'fixed';
+        tempContainer.style.left = '-9999px';
+        tempContainer.style.top = '-9999px';
+        tempContainer.style.width = '1200px';
+        tempContainer.style.height = '1600px';
+        tempContainer.style.backgroundColor = '#080c14';
+        tempContainer.style.padding = '80px';
+        tempContainer.style.display = 'flex';
+        tempContainer.style.flexDirection = 'column';
+        tempContainer.style.alignItems = 'center';
+        tempContainer.style.justifyContent = 'space-between';
+        tempContainer.style.color = 'white';
+        tempContainer.style.fontFamily = "'Press Start 2P', cursive";
+        
+        const content = `
+          <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px;">
+            <h1 style="font-size: 40px; font-weight: bold; letter-spacing: 12px; color: #ffffff; text-align: center; margin: 0;">BANGKOK QUEST</h1>
+            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 99px;"></div>
+          </div>
+
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 60px;">
+            <div style="width: 1000px; height: 562.5px; position: relative; border-radius: 40px; overflow: hidden; border: 4px solid rgba(255,255,255,0.1); background: #000;">
+              <img src="${drinkImageUrl}" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen;" />
+            </div>
+            
+            <div style="text-align: center;">
+              <h2 style="font-size: 48px; font-weight: bold; margin: 0; color: #fff;">${ending.title}</h2>
+              <div style="width: 60px; height: 4px; background: #ff00e0; margin: 20px auto;"></div>
+            </div>
+
+            <div style="width: 100%; background: rgba(255,255,255,0.05); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="margin-bottom: 30px; text-align: center;">
+                <p style="font-size: 14px; color: #666; margin-bottom: 15px; letter-spacing: 4px;">DRINK STATS</p>
+                <p style="font-size: 20px; color: #fff; line-height: 1.6; margin: 0;">${ending.recipe}</p>
+              </div>
+              
+              <div style="display: flex; justify-content: center; gap: 60px;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                  <span style="font-size: 12px; color: #666; letter-spacing: 2px;">ABV</span>
+                  <div style="display: flex; gap: 4px;">
+                    ${[...Array(5)].map((_, j) => `<span style="font-size: 24px; color: ${j < (ending.abv || 0) ? '#ff0000' : '#222'};">❤</span>`).join('')}
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                  <span style="font-size: 12px; color: #666; letter-spacing: 2px;">SWEETNESS</span>
+                  <div style="display: flex; gap: 4px;">
+                    ${[...Array(5)].map((_, j) => `<span style="font-size: 24px; color: ${j < (ending.sweetness || 0) ? '#ff0000' : '#222'};">❤</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="width: 100%; text-align: center; color: #333; font-size: 12px; letter-spacing: 4px; padding-bottom: 40px;">
+            THANK YOU FOR PLAYING
+          </div>
+        `;
+        
+        tempContainer.innerHTML = content;
+        document.body.appendChild(tempContainer);
+        
+        const img = tempContainer.querySelector('img');
+        if (img) {
+          await new Promise((resolve) => {
+            if (img.complete) resolve(true);
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(true);
+            setTimeout(() => resolve(true), 2000);
+          });
+        }
+
+        const canvas = await html2canvas(tempContainer, {
+          scale: 2,
+          backgroundColor: '#080c14',
+          useCORS: true,
+          logging: false
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        
+        document.body.removeChild(tempContainer);
+      }
+
+      pdf.save('Bangkok_Quest_Cocktail_Menu.pdf');
+    } catch (error) {
+      console.error("PDF Generation Error:", error);
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -910,6 +1090,14 @@ const App: React.FC = () => {
           <div>
             <h2 className="text-3xl font-arcade font-bold text-white tracking-tight glitch" data-text="CHEAT LIST">CHEAT LIST</h2>
             <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] mt-2 font-arcade">Direct access to all cocktail reveals</p>
+            <button 
+              onClick={generateCocktailMenuPDF}
+              disabled={isGeneratingPDF}
+              className="mt-6 flex items-center gap-3 px-6 py-3 bg-white/5 hover:bg-white/10 disabled:opacity-50 border border-white/10 rounded-2xl text-[9px] font-arcade text-arcade-accent transition-all uppercase tracking-widest group"
+            >
+              <Download className={`w-4 h-4 ${isGeneratingPDF ? 'animate-bounce' : 'group-hover:translate-y-0.5 transition-transform'}`} />
+              {isGeneratingPDF ? 'Building Menu PDF...' : 'Download Cocktail Menu (PDF)'}
+            </button>
           </div>
           <button 
             onClick={() => setIsSkipMenuOpen(false)}
