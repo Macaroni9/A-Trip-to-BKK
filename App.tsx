@@ -592,13 +592,13 @@ const App: React.FC = () => {
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                   <span style="font-size: 12px; color: #666; letter-spacing: 2px;">ABV</span>
                   <div style="display: flex; gap: 4px;">
-                    ${[...Array(5)].map((_, j) => `<span style="font-size: 24px; color: ${j < (ending.abv || 0) ? '#ff0000' : '#222'};">❤</span>`).join('')}
+                    ${[...Array(5)].map((_, j) => `<span style="font-size: 24px; color: ${j < (ending.abv || 0) ? '#ff0000' : '#333333'};">❤&#xFE0E;</span>`).join('')}
                   </div>
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                   <span style="font-size: 12px; color: #666; letter-spacing: 2px;">SWEETNESS</span>
                   <div style="display: flex; gap: 4px;">
-                    ${[...Array(5)].map((_, j) => `<span style="font-size: 24px; color: ${j < (ending.sweetness || 0) ? '#ff0000' : '#222'};">❤</span>`).join('')}
+                    ${[...Array(5)].map((_, j) => `<span style="font-size: 24px; color: ${j < (ending.sweetness || 0) ? '#ff0000' : '#333333'};">❤&#xFE0E;</span>`).join('')}
                   </div>
                 </div>
               </div>
