@@ -481,6 +481,10 @@ const App: React.FC = () => {
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Reduce scale on mobile to prevent memory crashes
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const renderScale = isMobile ? 1.2 : 2;
 
       // --- 1. COVER PAGE ---
       const coverContainer = document.createElement('div');
@@ -528,7 +532,7 @@ const App: React.FC = () => {
       }
 
       const coverCanvas = await html2canvas(coverContainer, {
-        scale: 2,
+        scale: renderScale,
         backgroundColor: '#080c14',
         useCORS: true,
         logging: false
@@ -538,6 +542,9 @@ const App: React.FC = () => {
 
       // --- 2. COCKTAIL PAGES ---
       for (let i = 0; i < endings.length; i++) {
+        // Small delay to prevent browser crash on mobile
+        if (isMobile) await new Promise(r => setTimeout(r, 200));
+        
         const ending = endings[i];
         const drinkImageUrl = DRINK_IMAGE_MAPPING[ending.id] || ending.thumbnailUrl;
         
@@ -617,7 +624,7 @@ const App: React.FC = () => {
         }
 
         const canvas = await html2canvas(tempContainer, {
-          scale: 2,
+          scale: renderScale,
           backgroundColor: '#080c14',
           useCORS: true,
           logging: false
@@ -632,6 +639,7 @@ const App: React.FC = () => {
       pdf.save('Bangkok_Quest_Cocktail_Menu.pdf');
     } catch (error) {
       console.error("PDF Generation Error:", error);
+      alert("PDF generation encountered an issue. If you're on mobile, try again or use a desktop browser.");
     } finally {
       setIsGeneratingPDF(false);
     }
